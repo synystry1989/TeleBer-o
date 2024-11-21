@@ -1,0 +1,357 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmdados.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdados.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmdados.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdados.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\dsdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|c:\\users\\synys\\source\\repos\\teleber\u00E7o\\frmdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdocumentos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|c:\\users\\synys\\source\\repos\\teleber\u00E7o\\dsprodutos.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsprodutos.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmdocumentos.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdocumentos.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\dsclientes.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsclientes.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|c:\\users\\synys\\source\\repos\\teleber\u00E7o\\dsprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsprodutos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\dsclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsclientes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\dsdocumentos.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:dsdocumentos.xsd||{07AC752B-D2B0-4DCD-AD9C-237BF561A30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\f808de3a6ba11c9fa3b8fd4785eea88df903f42880ba9656dcd9623c3f02795d\\ComboBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|c:\\users\\synys\\source\\repos\\teleber\u00E7o\\frmdados.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmdados.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\frmcat_marca.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CDB22B5F-D36F-40A8-9B0F-6FED0784676E}|TeleBer\u00E7o.csproj|solutionrelative:frmcat_marca.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\8b6e5402a1c23f9b29916245f9d6418ed750e3af4a7be9cf949164ff734345b1\\AccessibleObject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 13,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "DsClientes.xsd",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsClientes.xsd",
+              "RelativeDocumentMoniker": "DsClientes.xsd",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsClientes.xsd",
+              "RelativeToolTip": "DsClientes.xsd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003579|",
+              "WhenOpened": "2024-11-05T10:49:51.769Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FrmDados.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.cs",
+              "RelativeDocumentMoniker": "FrmDados.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.cs",
+              "RelativeToolTip": "FrmDados.cs",
+              "ViewState": "AQIAAAsCAAAAAAAAAAAwwCACAABNAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:34:28.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FrmDocumentos.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.cs",
+              "RelativeDocumentMoniker": "FrmDocumentos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.cs [Design]",
+              "RelativeToolTip": "FrmDocumentos.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-14T01:17:33.079Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DsDocumentos.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsDocumentos.cs",
+              "RelativeDocumentMoniker": "DsDocumentos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsDocumentos.cs",
+              "RelativeToolTip": "DsDocumentos.cs",
+              "ViewState": "AQIAADAAAAAAAAAAAAA2wD0AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T21:07:36.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FrmProdutos.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmProdutos.cs",
+              "RelativeDocumentMoniker": "FrmProdutos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmProdutos.cs",
+              "RelativeToolTip": "FrmProdutos.cs",
+              "ViewState": "AQIAAKkAAAAAAAAAAAAgwLUAAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:49:12.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DsProdutos.xsd",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsProdutos.xsd",
+              "RelativeDocumentMoniker": "DsProdutos.xsd",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsProdutos.xsd",
+              "RelativeToolTip": "DsProdutos.xsd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003579|",
+              "WhenOpened": "2024-11-20T13:38:50.487Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FrmClientes.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmClientes.cs",
+              "RelativeDocumentMoniker": "FrmClientes.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmClientes.cs",
+              "RelativeToolTip": "FrmClientes.cs",
+              "ViewState": "AQIAAH4AAAAAAAAAAAAuwDcAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:41:48.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmDados.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.cs",
+              "RelativeDocumentMoniker": "FrmDados.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.cs [Design]",
+              "RelativeToolTip": "FrmDados.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-16T15:22:12.418Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmClientes.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmClientes.cs",
+              "RelativeDocumentMoniker": "FrmClientes.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmClientes.cs [Design]",
+              "RelativeToolTip": "FrmClientes.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:39:06.358Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FrmProdutos.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmProdutos.cs",
+              "RelativeDocumentMoniker": "FrmProdutos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmProdutos.cs [Design]",
+              "RelativeToolTip": "FrmProdutos.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:49:08.258Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FrmDocumentos.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.cs",
+              "RelativeDocumentMoniker": "FrmDocumentos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.cs",
+              "RelativeToolTip": "FrmDocumentos.cs",
+              "ViewState": "AQIAAEIAAAAAAAAAAAAqwFUAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T13:59:32.568Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FrmDocumentos.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.Designer.cs",
+              "RelativeDocumentMoniker": "FrmDocumentos.Designer.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDocumentos.Designer.cs",
+              "RelativeToolTip": "FrmDocumentos.Designer.cs",
+              "ViewState": "AQIAAGEDAAAAAAAAAAAMwHEDAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-18T16:42:39.183Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DsProdutos.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsProdutos.cs",
+              "RelativeDocumentMoniker": "DsProdutos.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsProdutos.cs",
+              "RelativeToolTip": "DsProdutos.cs",
+              "ViewState": "AQIAAE4AAAAAAAAAAAAIwFgAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-20T13:18:18.839Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DsClientes.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsClientes.cs",
+              "RelativeDocumentMoniker": "DsClientes.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsClientes.cs",
+              "RelativeToolTip": "DsClientes.cs",
+              "ViewState": "AQIAACsAAAAAAAAAAAAQwDYAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T11:21:06.945Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DsDocumentos.xsd",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsDocumentos.xsd",
+              "RelativeDocumentMoniker": "DsDocumentos.xsd",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\DsDocumentos.xsd",
+              "RelativeToolTip": "DsDocumentos.xsd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003579|",
+              "WhenOpened": "2024-10-29T21:08:05.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ComboBox.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\f808de3a6ba11c9fa3b8fd4785eea88df903f42880ba9656dcd9623c3f02795d\\ComboBox.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\f808de3a6ba11c9fa3b8fd4785eea88df903f42880ba9656dcd9623c3f02795d\\ComboBox.cs",
+              "ToolTip": "C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\f808de3a6ba11c9fa3b8fd4785eea88df903f42880ba9656dcd9623c3f02795d\\ComboBox.cs",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\f808de3a6ba11c9fa3b8fd4785eea88df903f42880ba9656dcd9623c3f02795d\\ComboBox.cs",
+              "ViewState": "AQIAABkPAAAAAAAAAAAWwDkPAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-15T17:28:47.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FrmDados.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.Designer.cs",
+              "RelativeDocumentMoniker": "FrmDados.Designer.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmDados.Designer.cs",
+              "RelativeToolTip": "FrmDados.Designer.cs",
+              "ViewState": "AQIAAPEAAAAAAAAAAAAEwP8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-19T18:55:38.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "FrmCat_Marca.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmCat_Marca.cs",
+              "RelativeDocumentMoniker": "FrmCat_Marca.cs",
+              "ToolTip": "C:\\Users\\synys\\source\\repos\\TeleBer\u00E7o\\FrmCat_Marca.cs [Design]",
+              "RelativeToolTip": "FrmCat_Marca.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-13T01:18:48.152Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "AccessibleObject.cs",
+              "DocumentMoniker": "C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\8b6e5402a1c23f9b29916245f9d6418ed750e3af4a7be9cf949164ff734345b1\\AccessibleObject.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\8b6e5402a1c23f9b29916245f9d6418ed750e3af4a7be9cf949164ff734345b1\\AccessibleObject.cs",
+              "ToolTip": "C:\\Users\\synys\\AppData\\Local\\Temp\\.vsdbgsrc\\8b6e5402a1c23f9b29916245f9d6418ed750e3af4a7be9cf949164ff734345b1\\AccessibleObject.cs",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\8b6e5402a1c23f9b29916245f9d6418ed750e3af4a7be9cf949164ff734345b1\\AccessibleObject.cs",
+              "ViewState": "AQIAAEgJAAAAAAAAAAAnwGQJAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-18T18:02:48.631Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
