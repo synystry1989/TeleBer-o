@@ -986,9 +986,8 @@ namespace TeleBerço
             {
                 dsClientes.NovoCliente();
                 LimparCliente();
-                TxtCodigoCl.Text = dsClientes.Clientes[0].CodCl;
+                TxtCodigoCl.Text = dsClientes.DaProxNrCliente();
                 BtnGravarCliente.Enabled = true;
-
                 HabilitarCliente();
                 TxtNomeCl.Focus();
             }
@@ -1059,11 +1058,7 @@ namespace TeleBerço
 
         private void NrDoc_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
             PreencheDocumento(TxtCodigoDoc.Text, int.Parse(NrDoc.Text));
-
-
         }
     }
 }

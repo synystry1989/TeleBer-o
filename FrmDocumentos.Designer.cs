@@ -60,19 +60,6 @@
             this.btnAbrirPr = new System.Windows.Forms.Button();
             this.BtnEliminar = new System.Windows.Forms.Button();
             this.DgridArtigos = new System.Windows.Forms.DataGridView();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cabProdutoIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.produtoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Marca = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Categoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.numLInhaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomeCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomeMarca = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nomeProdutoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iMEIDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.precoUntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.quantidadeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listaProdutosBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dsDocumentos = new TeleBerço.DsDocumentos();
             this.BtnNovo = new System.Windows.Forms.Button();
@@ -123,6 +110,19 @@
             this.btnNovoCliente = new System.Windows.Forms.Button();
             this.BtnGravarCliente = new System.Windows.Forms.Button();
             this.btnAbrirCliente = new System.Windows.Forms.Button();
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cabProdutoIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.produtoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Marca = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Categoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.numLInhaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeMarca = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nomeProdutoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iMEIDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.precoUntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantidadeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgridArtigos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.listaProdutosBindingSource)).BeginInit();
@@ -524,89 +524,6 @@
             this.DgridArtigos.Size = new System.Drawing.Size(1583, 73);
             this.DgridArtigos.TabIndex = 9;
             this.DgridArtigos.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgridArtigos_RowLeave);
-            // 
-            // iDDataGridViewTextBoxColumn
-            // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // cabProdutoIDDataGridViewTextBoxColumn
-            // 
-            this.cabProdutoIDDataGridViewTextBoxColumn.DataPropertyName = "CabProdutoID";
-            this.cabProdutoIDDataGridViewTextBoxColumn.HeaderText = "CabProdutoID";
-            this.cabProdutoIDDataGridViewTextBoxColumn.Name = "cabProdutoIDDataGridViewTextBoxColumn";
-            this.cabProdutoIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // produtoDataGridViewTextBoxColumn
-            // 
-            this.produtoDataGridViewTextBoxColumn.DataPropertyName = "Produto";
-            this.produtoDataGridViewTextBoxColumn.HeaderText = "Produto";
-            this.produtoDataGridViewTextBoxColumn.Name = "produtoDataGridViewTextBoxColumn";
-            this.produtoDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // Marca
-            // 
-            this.Marca.DataPropertyName = "Marca";
-            this.Marca.HeaderText = "Marca";
-            this.Marca.Name = "Marca";
-            this.Marca.Visible = false;
-            // 
-            // Categoria
-            // 
-            this.Categoria.DataPropertyName = "Categoria";
-            this.Categoria.HeaderText = "Categoria";
-            this.Categoria.Name = "Categoria";
-            this.Categoria.Visible = false;
-            // 
-            // numLInhaDataGridViewTextBoxColumn
-            // 
-            this.numLInhaDataGridViewTextBoxColumn.DataPropertyName = "NumLInha";
-            this.numLInhaDataGridViewTextBoxColumn.HeaderText = "NumLInha";
-            this.numLInhaDataGridViewTextBoxColumn.Name = "numLInhaDataGridViewTextBoxColumn";
-            // 
-            // NomeCategoria
-            // 
-            this.NomeCategoria.DataPropertyName = "NomeCategoria";
-            this.NomeCategoria.HeaderText = "Categoria";
-            this.NomeCategoria.Name = "NomeCategoria";
-            // 
-            // NomeMarca
-            // 
-            this.NomeMarca.DataPropertyName = "NomeMarca";
-            this.NomeMarca.HeaderText = "Marca";
-            this.NomeMarca.Name = "NomeMarca";
-            // 
-            // nomeProdutoDataGridViewTextBoxColumn
-            // 
-            this.nomeProdutoDataGridViewTextBoxColumn.DataPropertyName = "NomeProduto";
-            this.nomeProdutoDataGridViewTextBoxColumn.HeaderText = "Produto";
-            this.nomeProdutoDataGridViewTextBoxColumn.Name = "nomeProdutoDataGridViewTextBoxColumn";
-            // 
-            // iMEIDataGridViewTextBoxColumn
-            // 
-            this.iMEIDataGridViewTextBoxColumn.DataPropertyName = "IMEI";
-            this.iMEIDataGridViewTextBoxColumn.HeaderText = "IMEI";
-            this.iMEIDataGridViewTextBoxColumn.Name = "iMEIDataGridViewTextBoxColumn";
-            // 
-            // precoUntDataGridViewTextBoxColumn
-            // 
-            this.precoUntDataGridViewTextBoxColumn.DataPropertyName = "PrecoUnt";
-            this.precoUntDataGridViewTextBoxColumn.HeaderText = "Preco Unt";
-            this.precoUntDataGridViewTextBoxColumn.Name = "precoUntDataGridViewTextBoxColumn";
-            // 
-            // quantidadeDataGridViewTextBoxColumn
-            // 
-            this.quantidadeDataGridViewTextBoxColumn.DataPropertyName = "Quantidade";
-            this.quantidadeDataGridViewTextBoxColumn.HeaderText = "Quantidade";
-            this.quantidadeDataGridViewTextBoxColumn.Name = "quantidadeDataGridViewTextBoxColumn";
-            // 
-            // totalDataGridViewTextBoxColumn
-            // 
-            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
-            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
-            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
             // 
             // listaProdutosBindingSource
             // 
@@ -1253,6 +1170,90 @@
             this.btnAbrirCliente.Text = "Abrir";
             this.btnAbrirCliente.UseVisualStyleBackColor = false;
             this.btnAbrirCliente.Click += new System.EventHandler(this.btnAbrirCliente_Click_1);
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // cabProdutoIDDataGridViewTextBoxColumn
+            // 
+            this.cabProdutoIDDataGridViewTextBoxColumn.DataPropertyName = "CabProdutoID";
+            this.cabProdutoIDDataGridViewTextBoxColumn.HeaderText = "CabProdutoID";
+            this.cabProdutoIDDataGridViewTextBoxColumn.Name = "cabProdutoIDDataGridViewTextBoxColumn";
+            this.cabProdutoIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // produtoDataGridViewTextBoxColumn
+            // 
+            this.produtoDataGridViewTextBoxColumn.DataPropertyName = "Produto";
+            this.produtoDataGridViewTextBoxColumn.HeaderText = "Produto";
+            this.produtoDataGridViewTextBoxColumn.Name = "produtoDataGridViewTextBoxColumn";
+            this.produtoDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // Marca
+            // 
+            this.Marca.DataPropertyName = "Marca";
+            this.Marca.HeaderText = "Marca";
+            this.Marca.Name = "Marca";
+            this.Marca.Visible = false;
+            // 
+            // Categoria
+            // 
+            this.Categoria.DataPropertyName = "Categoria";
+            this.Categoria.HeaderText = "Categoria";
+            this.Categoria.Name = "Categoria";
+            this.Categoria.Visible = false;
+            // 
+            // numLInhaDataGridViewTextBoxColumn
+            // 
+            this.numLInhaDataGridViewTextBoxColumn.DataPropertyName = "NumLInha";
+            this.numLInhaDataGridViewTextBoxColumn.HeaderText = "NumLInha";
+            this.numLInhaDataGridViewTextBoxColumn.Name = "numLInhaDataGridViewTextBoxColumn";
+            this.numLInhaDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // NomeCategoria
+            // 
+            this.NomeCategoria.DataPropertyName = "NomeCategoria";
+            this.NomeCategoria.HeaderText = "Categoria";
+            this.NomeCategoria.Name = "NomeCategoria";
+            // 
+            // NomeMarca
+            // 
+            this.NomeMarca.DataPropertyName = "NomeMarca";
+            this.NomeMarca.HeaderText = "Marca";
+            this.NomeMarca.Name = "NomeMarca";
+            // 
+            // nomeProdutoDataGridViewTextBoxColumn
+            // 
+            this.nomeProdutoDataGridViewTextBoxColumn.DataPropertyName = "NomeProduto";
+            this.nomeProdutoDataGridViewTextBoxColumn.HeaderText = "Produto";
+            this.nomeProdutoDataGridViewTextBoxColumn.Name = "nomeProdutoDataGridViewTextBoxColumn";
+            // 
+            // iMEIDataGridViewTextBoxColumn
+            // 
+            this.iMEIDataGridViewTextBoxColumn.DataPropertyName = "IMEI";
+            this.iMEIDataGridViewTextBoxColumn.HeaderText = "IMEI";
+            this.iMEIDataGridViewTextBoxColumn.Name = "iMEIDataGridViewTextBoxColumn";
+            // 
+            // precoUntDataGridViewTextBoxColumn
+            // 
+            this.precoUntDataGridViewTextBoxColumn.DataPropertyName = "PrecoUnt";
+            this.precoUntDataGridViewTextBoxColumn.HeaderText = "Preco Unt";
+            this.precoUntDataGridViewTextBoxColumn.Name = "precoUntDataGridViewTextBoxColumn";
+            // 
+            // quantidadeDataGridViewTextBoxColumn
+            // 
+            this.quantidadeDataGridViewTextBoxColumn.DataPropertyName = "Quantidade";
+            this.quantidadeDataGridViewTextBoxColumn.HeaderText = "Quantidade";
+            this.quantidadeDataGridViewTextBoxColumn.Name = "quantidadeDataGridViewTextBoxColumn";
+            // 
+            // totalDataGridViewTextBoxColumn
+            // 
+            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
+            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
+            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
             // 
             // FrmDocumentos
             // 
