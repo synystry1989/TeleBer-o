@@ -86,7 +86,7 @@ namespace TeleBerço
             if (codCl == null)
             {
                 valor = 001;
-                return $"PR{valor:000}"; ;
+                return $"PR{valor:000}"; 
             }
             else
             {

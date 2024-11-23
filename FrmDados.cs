@@ -235,6 +235,7 @@ namespace TeleBerço
             string campoData = cbFiltro.SelectedItem.ToString().Replace(" ", "");
             dataViewAtual.RowFilter = $"{campoData} >= '{dataInicio:yyyy-MM-dd}' AND {campoData} <= '{dataFim:yyyy-MM-dd}'";
         }
+
         private void AplicarFiltroPorData(DateTime data)
         {
             string campoData = cbFiltro.SelectedItem.ToString().Replace(" ", "");
@@ -255,14 +256,13 @@ namespace TeleBerço
                 MessageBox.Show($"Erro ao selecionar item: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
      
         private void EditarCliente()
         {
+
             try
-            {
-               
-                FrmClientes frmClientes = new FrmClientes
+            {              
+               FrmClientes frmClientes = new FrmClientes
                 {
                     RowSelecionada = RowSelecionada
                 };

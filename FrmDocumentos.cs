@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TeleBerço.DsProdutosTableAdapters;
 
@@ -207,7 +211,7 @@ namespace TeleBerço
         {
             var clienteRow = dsClientes.PesquisaCliente(TxtCodigoCl.Text);
 
-            if (clienteRow != null)
+            if (clienteRow.Nome != "")
             {
                 TxtNomeCl.Text = clienteRow.Nome;
                 TxtTelefone.Text = clienteRow.Telefone;
@@ -239,6 +243,8 @@ namespace TeleBerço
             try
             {
                 dsProdutos.NovoArtigo();
+                LimparProduto();
+                txtObservacoes.Text = "";
                 HabilitarProduto();
             }
             catch (Exception ex)
@@ -432,8 +438,8 @@ namespace TeleBerço
                 {
                     dsProdutos.NovoArtigo();
                     txtEquipNome.Text = produtoRow.NomeProduto;
-                    txtCat.SelectedValue = produtoRow.Categorias;
-                    txtMarca.SelectedValue = produtoRow.Marcas;
+                    txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
+                    txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
                     txtImei.Text = produtoRow.IMEI;
                 }
             }
@@ -605,7 +611,7 @@ namespace TeleBerço
 
             LimparCliente();
             LimparProduto();
-
+            txtObservacoes.Text = "";
             dsClientes.Clientes.Clear();
             dsDocumentos.CabecDocumento.Clear();
             dsDocumentos.ListaProdutos.Clear();
@@ -625,7 +631,7 @@ namespace TeleBerço
             txtCat.Text = "";
             txtMarca.Text = "";
             txtImei.Text = string.Empty;
-            txtObservacoes.Text = string.Empty;
+           
         }
 
         private void HabilitarCampos()
@@ -682,13 +688,13 @@ namespace TeleBerço
 
         #region Impressão
 
+     
         private void ConfigurarImpressao()
         {
             printDocument = new PrintDocument();
-            printDocument.DefaultPageSettings.Landscape = true;
+            
             printDocument.BeginPrint += BeginPrint;
             printDocument.PrintPage += PrintPage;
-
             PrintPreviewDialog previewDialog = new PrintPreviewDialog
             {
                 Document = printDocument,
@@ -697,7 +703,6 @@ namespace TeleBerço
                 StartPosition = FormStartPosition.CenterScreen,
                 UseAntiAlias = true
             };
-
             previewDialog.ShowDialog();
         }
 
@@ -750,42 +755,52 @@ namespace TeleBerço
                 }
             }
         }
+
+
         private void PrintPage(object sender, PrintPageEventArgs e)
         {
             try
             {
-                // Definir margens
+                // Definir margens e dimensões
                 float marginLeft = e.MarginBounds.Left;
-                float marginTop = e.MarginBounds.Top - 70;
+                float marginTop = e.MarginBounds.Top; // Ajuste conforme necessário
                 float pageWidth = e.MarginBounds.Width;
                 float pageHeight = e.MarginBounds.Height;
 
                 // Definir as fontes
-                Font fonteLoja = new Font("Arial", 22, FontStyle.Bold);
-                Font fonteDescricao = new Font("Arial", 14, FontStyle.Bold);
+                Font fonteTitulo = new Font("Arial", 22, FontStyle.Bold);
+                Font fonteSubtitulo = new Font("Arial", 14, FontStyle.Bold);
                 Font fonteTexto = new Font("Arial", 12, FontStyle.Regular);
+               
                 Brush brush = Brushes.Black;
 
-                // Desenhar o cabeçalho (logotipo e nome da loja)
-                DrawHeader(e, ref marginTop, pageWidth, fonteLoja, brush);
+                // Posicionamento vertical inicial
+                float yPos = marginTop;
+
+                // Desenhar o cabeçalho (logotipo inicial, nome da loja e informações do documento)
+                yPos = DrawHeader(e.Graphics, marginLeft, yPos, pageWidth, fonteTitulo, fonteTexto, brush);
 
                 // Desenhar a linha separadora
-                DrawSeparator(e, ref marginTop, pageWidth);
+                 //  yPos = DrawSeparator(e.Graphics,marginLeft, yPos, pageWidth);
 
-                // Desenhar a descrição
-                //marginTop = DrawDescription(e, marginTop, pageWidth, fonteDescricao, brush);
+                // Desenhar as informações do cliente
+                yPos = DrawClientInfo(e.Graphics, marginLeft, yPos, pageWidth, fonteSubtitulo, fonteTexto, brush);
 
-                // Capturar os painéis e o DataGridView
-                List<ContentItem> contentItems = CaptureContentItems();
+                // Desenhar a tabela de itens (DataGridView) com 7 colunas
+                yPos = DrawItemsTable(e.Graphics, marginLeft, yPos, pageWidth,  brush);
 
-                // Desenhar os itens de conteúdo ajustados
-                marginTop = DrawContentItems(e, contentItems, marginTop, pageWidth);
+               
+                // Desenhar as informações do produto após a tabela, com o título "Objeto"
+                 yPos = DrawObservacoesDescontoTotal(e.Graphics, marginLeft, yPos,TxtCodigoDoc.Text, pageWidth, fonteSubtitulo, fonteTexto, brush);
+
+                yPos = DrawSeparator(e.Graphics, marginLeft, yPos, pageWidth);
+
+                yPos = DrawFinalLogo(e.Graphics, marginLeft, yPos, marginTop, pageWidth, pageHeight, brush);
 
                 // Desenhar a assinatura e a data
-                marginTop = DrawSignatureAndDate(e, marginTop, pageWidth, fonteTexto, brush);
+                yPos = DrawSignatureAndDate(e.Graphics, marginLeft, yPos,pageHeight, pageWidth, fonteTexto, brush);
 
-                // Desenhar a imagem de fundo
-                DrawBackgroundImage(e, marginTop, pageWidth);
+                // Desenhar o logotipo final
 
                 // Indica que não há mais páginas a serem impressas
                 e.HasMorePages = false;
@@ -797,145 +812,387 @@ namespace TeleBerço
             }
         }
 
-        private void DrawHeader(PrintPageEventArgs e, ref float yPos, float pageWidth, Font fonteLoja, Brush brush)
+
+        private float DrawHeader(Graphics graphics, float marginLeft, float yPos, float pageWidth, Font fonteTitulo, Font fonteTexto, Brush brush)
         {
             string logoPath = "C:\\Users\\synys\\source\\repos\\TeleBerço\\Resources\\transferir.jpeg";
-            string storeName = TxtDescricaoDoc.Text;
+            string storeName = TxtDescricaoDoc.Text; // Nome do documento
+            string codDocumento = TxtCodigoDoc.Text; // Código do documento
+            int nrDocumento = NrDoc.TabIndex + 1; // Número do documento
+            string documento = codDocumento + $"{nrDocumento:000}";
+            string dataValor = DataMod.Value.ToShortDateString();
 
+            float logoHeight = 110;
+            float logoWidth = 0;
+
+            // **1. Logo Centralizado e Ajustado à Largura da Página**
             if (File.Exists(logoPath))
             {
                 using (Image logo = Image.FromFile(logoPath))
                 {
-                    float logoHeight = 110;
-                    float logoWidth = (logo.Width / (float)logo.Height) * logoHeight + 60;
+                    // Calcular a largura do logo mantendo a proporção
+                    float aspectRatio = logo.Width / (float)logo.Height;
+                    logoWidth = aspectRatio * logoHeight +30;
 
-                    SizeF storeNameSize = e.Graphics.MeasureString(storeName, fonteLoja);
+                    // Garantir que o logo não ultrapasse a largura da página
+                    if (logoWidth > pageWidth)
+                    {
+                        logoWidth = pageWidth;
+                        logoHeight = logoWidth / aspectRatio;
+                    }
 
-
-                    float combinedX = e.MarginBounds.Left - 60;
-
-                    e.Graphics.DrawImage(logo, combinedX, yPos, logoWidth, logoHeight);
-                    float storeNameX = e.MarginBounds.Left + (pageWidth - storeNameSize.Width) / 2;
-                    float storeNameY = yPos + (logoHeight - storeNameSize.Height) / 2;
-                    e.Graphics.DrawString(storeName, fonteLoja, brush, storeNameX, storeNameY);
+                    // Centralizar o logo horizontalmente
+                    float logoX = marginLeft + (pageWidth - logoWidth) / 2;
+                    graphics.DrawImage(logo, logoX, yPos, logoWidth, logoHeight);
                 }
             }
-            else
-            {
-                SizeF storeNameSize = e.Graphics.MeasureString(storeName, fonteLoja);
-                float storeNameX = e.MarginBounds.Left + (pageWidth - storeNameSize.Width) / 2;
-                e.Graphics.DrawString(storeName, fonteLoja, brush, storeNameX, yPos);
-            }
 
-            yPos += 110; // Avançar o yPos após o logotipo e o nome da loja
+            yPos += logoHeight + 10; // Espaço após o logo
+
+            // **2. Linha Separadora**
+            graphics.DrawLine(Pens.Black, marginLeft, yPos, marginLeft + pageWidth, yPos);
+            yPos += 40; // Espaçamento de 40 unidades após a linha
+
+            // **3. Nome do Documento Centralizado**
+            SizeF storeNameSize = graphics.MeasureString(storeName, fonteTitulo);
+            float storeNameX = marginLeft + (pageWidth - storeNameSize.Width) / 2;
+            graphics.DrawString(storeName, fonteTitulo, brush, storeNameX, yPos);
+            yPos += storeNameSize.Height + 10; // Espaço após o nome do documento
+
+            // **4. Número da Fatura e Data na Mesma Linha dentro de um Retângulo**
+            Font fonteNegrito = new Font(fonteTexto.FontFamily, fonteTexto.Size, FontStyle.Bold);
+            Font fonteNormal = fonteTexto;
+
+            string numeroLabel = "Número: ";
+            string numeroValor = documento;
+            string dataLabel = "Data: ";
+            // dataValor já definido anteriormente
+
+            // Medir alturas para alinhamento vertical
+            float lineHeight = Math.Max(
+                graphics.MeasureString(numeroLabel + numeroValor, fonteTexto).Height,
+                graphics.MeasureString(dataLabel + dataValor, fonteTexto).Height);
+
+            // Medir larguras dos textos
+            SizeF numeroSize = graphics.MeasureString(numeroLabel + numeroValor, fonteTexto);
+            SizeF dataSize = graphics.MeasureString(dataLabel + dataValor, fonteTexto);
+
+            // **Desenhar Retângulo que Envolve o Texto do "Número" e da "Data"**
+            float rectX = marginLeft;
+            float rectY = yPos - 5; // Ajuste vertical para incluir o texto e um pequeno espaçamento
+            float rectWidth = pageWidth;
+            float rectHeight = lineHeight + 3; // Altura do texto mais espaçamento superior e inferior
+
+            // Desenhar retângulo ao redor do texto do "Número" e "Data"
+            graphics.DrawRectangle(Pens.Black, rectX, rectY, rectWidth, rectHeight);
+
+            // **Número da Fatura Alinhado à Esquerda dentro do Retângulo**
+            float numeroX = marginLeft + 5; // Espaçamento interno à esquerda
+            float textoY = yPos; // Posição vertical do texto
+
+            graphics.DrawString(numeroLabel, fonteNegrito, brush, numeroX, textoY);
+            float numeroLabelWidth = graphics.MeasureString(numeroLabel, fonteNegrito).Width;
+            graphics.DrawString(numeroValor, fonteNormal, brush, numeroX + numeroLabelWidth, textoY);
+
+            // **Data Alinhada à Direita dentro do Retângulo**
+            float dataX = marginLeft + pageWidth - dataSize.Width - 10; // Espaçamento interno à direita
+            graphics.DrawString(dataLabel, fonteNegrito, brush, dataX, textoY);
+            float dataLabelWidth = graphics.MeasureString(dataLabel, fonteNegrito).Width;
+            graphics.DrawString(dataValor, fonteNormal, brush, dataX + dataLabelWidth, textoY);
+
+            yPos += rectHeight + 20; // Avançar o yPos após esta seção, incluindo espaçamento adicional
+
+            return yPos;
         }
 
-        private void DrawSeparator(PrintPageEventArgs e, ref float yPos, float pageWidth)
+        private float DrawClientInfo(Graphics graphics, float marginLeft, float yPos, float pageWidth, Font fonteSubtitulo, Font fonteTexto, Brush brush)
         {
-            e.Graphics.DrawLine(Pens.Black, e.MarginBounds.Left, yPos, e.MarginBounds.Left + pageWidth + 55, yPos);
-            yPos += 20; // Aumentar o espaçamento após a linha
+            // Título da seção
+            graphics.DrawString("Informações do Cliente ", fonteSubtitulo, brush, marginLeft, yPos);
+            yPos += fonteSubtitulo.GetHeight(graphics) + 5;
+
+            // Definir fontes
+            Font fonteNegrito = new Font(fonteTexto.FontFamily, fonteTexto.Size, FontStyle.Bold);
+            Font fonteNormal = fonteTexto;
+
+            // Preparar informações do cliente
+            string[] clienteLabels = { "Nome:", "Telefone:", "Email:" };
+            string[] clienteValores = { TxtNomeCl.Text, TxtTelefone.Text, TxtEmail.Text };
+
+            // Preparar informações do produto
+            string[] produtoLabels = { "Categoria:", "Marca:" ,"Produto:", "IMEI: "};
+            string[] produtoValores = { txtCat.Text, txtMarca.Text,txtEquipNome.Text, txtImei.Text };
+
+            // Calcular a altura necessária para as informações do cliente e do produto
+            float lineHeight = fonteTexto.GetHeight(graphics);
+            int numLinhasCliente = clienteLabels.Length;
+            int numLinhasProduto = produtoLabels.Length;
+            int numLinhas = Math.Max(numLinhasCliente, numLinhasProduto);
+
+            // Altura total do conteúdo dentro do retângulo
+            float rectHeight = (lineHeight + 5) * numLinhas + 15; // 5 unidades de espaçamento entre linhas, 20 de espaçamento interno
+
+            // Definir dimensões do retângulo
+            float rectX = marginLeft;
+            float rectY = yPos;
+            float rectWidth = pageWidth;
+
+            // Desenhar retângulo
+            graphics.DrawRectangle(Pens.Black, rectX, rectY, rectWidth, rectHeight);
+
+            // Espaçamento interno
+            float paddingX = 10;
+            float paddingY = 10;
+
+            // Posição inicial para desenhar o texto dentro do retângulo
+            float textY = rectY + paddingY+15;
+
+            // **Desenhar informações do cliente alinhadas à margem esquerda**
+            float clienteX = rectX + paddingX;
+
+            for (int i = 0; i < numLinhasCliente; i++)
+            {
+                // Desenhar label
+                graphics.DrawString(clienteLabels[i], fonteNegrito, brush, clienteX, textY);
+                float labelWidth = graphics.MeasureString(clienteLabels[i], fonteNegrito).Width;
+                // Desenhar valor
+                graphics.DrawString(clienteValores[i], fonteNormal, brush, clienteX + labelWidth + 5, textY);
+
+                textY += lineHeight + 5; // Atualizar Y para a próxima linha
+            }
+
+            // **Desenhar informações do produto alinhadas à margem direita**
+            // Resetar textY para a posição inicial
+            textY = rectY + paddingY+5;
+
+            // Medir a largura máxima das labels e valores do produto
+            float maxProdutoLabelWidth = 0;
+            float maxProdutoValorWidth = 0;
+            for (int i = 0; i < numLinhasProduto; i++)
+            {
+                float labelWidth = graphics.MeasureString(produtoLabels[i], fonteNegrito).Width;
+                float valorWidth = graphics.MeasureString(produtoValores[i], fonteNormal).Width;
+                if (labelWidth > maxProdutoLabelWidth) maxProdutoLabelWidth = labelWidth;
+                if (valorWidth > maxProdutoValorWidth) maxProdutoValorWidth = valorWidth;
+            }
+
+            // Calcular a posição X inicial para as informações do produto
+            float produtoX = rectX + rectWidth - paddingX - (maxProdutoLabelWidth + 5 + maxProdutoValorWidth);
+
+            for (int i = 0; i < numLinhasProduto; i++)
+            {
+                // Desenhar label
+                graphics.DrawString(produtoLabels[i], fonteNegrito, brush, produtoX, textY);
+                float labelWidth = graphics.MeasureString(produtoLabels[i], fonteNegrito).Width;
+                // Desenhar valor
+                graphics.DrawString(produtoValores[i], fonteNormal, brush, produtoX + labelWidth + 5, textY);
+
+                textY += lineHeight + 5; // Atualizar Y para a próxima linha
+            }
+
+            // Atualizar yPos para a próxima seção
+            yPos += rectHeight + 50; // Espaçamento após o retângulo
+
+            return yPos;
         }
 
 
-
-        private List<ContentItem> CaptureContentItems()
+        private float DrawObservacoesDescontoTotal(Graphics graphics, float marginLeft, float yPos,string codDocumento, float pageWidth, Font fonteSubtitulo, Font fonteTexto,  Brush brush)
         {
-            List<ContentItem> contentItems = new List<ContentItem>();
 
-            // Capturar o painel 'Clientes' (Panel2)
-            if (Panel2 != null)
+            Font fonteNegrito = new Font(fonteTexto.FontFamily, 12, FontStyle.Bold);
+
+            Font fonteNormal = new Font(fonteTexto.FontFamily, 10, FontStyle.Bold); 
+            // Espaçamento interno e entre elementos
+            float padding = 10;
+            float lineHeight = fonteTexto.GetHeight(graphics) + 5;
+
+            // **1. Preparar textos e valores**
+            string observacoesLabel = "Observações";
+            string observacoesTexto = txtObservacoes.Text;
+
+            string descontoLabel = "Desconto:";
+            string descontoValor = txtDesconto.Text;
+
+            string totalLabel = "Total:";
+            string totalValor = txtTotal.Text;
+
+            string previsaoLabel = "Previsão:";
+            string previsaoTexto = dateTimePicker1.Value.Date.ToString("dd/MM/yyyy");
+
+            // **2. Definir áreas para Observações e Desconto/Total**
+            // Dividiremos a largura disponível em duas partes
+            float availableWidth = pageWidth;
+            float observacoesWidth = availableWidth * 0.7f; // 60% para Observações
+            float valoresWidth = availableWidth * 0.3f;     // 40% para Desconto e Total
+
+            // **3. Desenhar a seção de Observações**
+            // **3.1. Desenhar o rótulo "Observações"**
+            graphics.DrawString(observacoesLabel, fonteSubtitulo, brush, marginLeft, yPos);
+            yPos += lineHeight;
+
+            // **3.2. Desenhar o retângulo para o texto das Observações**
+            float observacoesRectX = marginLeft;
+            float observacoesRectY = yPos;
+            float observacoesRectHeight = (lineHeight * 3) + (padding * 2); // 3 linhas de texto + espaçamento interno
+            graphics.DrawRectangle(Pens.Black, observacoesRectX, observacoesRectY, observacoesWidth, observacoesRectHeight);
+
+            // **3.3. Desenhar o texto das Observações dentro do retângulo**
+            RectangleF observacoesTextRect = new RectangleF(
+                observacoesRectX + padding,
+                observacoesRectY + padding,
+                observacoesWidth - (padding * 2),
+                observacoesRectHeight - (padding * 2)
+            );
+            // Limitar o texto a 3 linhas
+            StringFormat stringFormat = new StringFormat();
+            stringFormat.Trimming = StringTrimming.EllipsisWord;
+            stringFormat.FormatFlags = StringFormatFlags.LineLimit;
+
+            graphics.DrawString(observacoesTexto, fonteTexto, brush, observacoesTextRect, stringFormat);
+
+            // **4. Desenhar a seção de Desconto e Total**
+            float valoresX = marginLeft + observacoesWidth;
+            float valoresY = yPos ;
+
+            if (codDocumento == "ORC" || codDocumento == "NDC")
             {
-                Bitmap panel2Bitmap = CapturePanel(Panel2);
-                contentItems.Add(new ContentItem { Image = panel2Bitmap, OriginalWidth = panel2Bitmap.Width - 350, OriginalHeight = panel2Bitmap.Height });
+                graphics.DrawString(previsaoLabel, fonteNormal, brush, valoresX + padding, valoresY + padding);
+                float labelDireitaWidth = graphics.MeasureString(previsaoLabel, fonteNegrito).Width;
+                graphics.DrawString(previsaoTexto, fonteNormal, brush, valoresX + padding + labelDireitaWidth , valoresY + padding);
             }
+                // **4.1. Desenhar "Desconto" e valor**
+                graphics.DrawString(descontoLabel, fonteNormal, brush, valoresX + padding, valoresY + padding + 20 );
+            float descontoLabelWidth = graphics.MeasureString(descontoLabel, fonteSubtitulo).Width;
+            graphics.DrawString(descontoValor, fonteNormal, brush, valoresX + padding + descontoLabelWidth-15, valoresY + padding+20 );
 
-            // Capturar o DataGridView
-            if (DgridArtigos != null && DgridArtigos.Rows.Count > 0)
-            {
-                Bitmap dgvBitmap = new Bitmap(DgridArtigos.Width, DgridArtigos.Height - 180);
-                DgridArtigos.DrawToBitmap(dgvBitmap, new Rectangle(0, 0, DgridArtigos.Width, DgridArtigos.Height));
-                contentItems.Add(new ContentItem { Image = dgvBitmap, OriginalWidth = dgvBitmap.Width, OriginalHeight = dgvBitmap.Height });
-            }
+            // **4.2. Desenhar "Total" e valor abaixo de "Desconto"**
+            float totalY = valoresY + lineHeight + padding;
+            graphics.DrawString(totalLabel, fonteNegrito, brush, valoresX + padding+70, totalY + padding+ 20);
+            float totalLabelWidth = graphics.MeasureString(totalLabel, fonteSubtitulo).Width;
+            graphics.DrawString(totalValor, fonteTexto, brush, valoresX + padding + totalLabelWidth + 65, totalY + padding+20);
 
-            // Capturar o painel 'Objeto' (Panel3)
-            if (panel3 != null)
-            {
-                Bitmap panel3Bitmap = CapturePanel(panel3);
-                contentItems.Add(new ContentItem { Image = panel3Bitmap, OriginalWidth = panel3Bitmap.Width, OriginalHeight = panel3Bitmap.Height });
-            }
+            // **4.3. Desenhar retângulo ao redor de Desconto e Total**
+            float valoresHeight = observacoesRectHeight; // Mesmo altura da seção de Observações
+            graphics.DrawRectangle(Pens.Black, valoresX, valoresY, valoresWidth, valoresHeight);
 
-            return contentItems; // Retornar a lista de itens de conteúdo
+            // **5. Atualizar yPos para a próxima seção**
+            yPos += observacoesRectHeight + 30; // Espaçamento após a seção
+
+            return yPos;
         }
 
-        private float DrawContentItems(PrintPageEventArgs e, List<ContentItem> contentItems, float yPos, float pageWidth)
+        private float DrawSeparator(Graphics graphics, float marginLeft, float yPos, float pageWidth)
         {
-
-            // Calcular a altura disponível para os itens de conteúdo
-            float availableHeight = e.MarginBounds.Height - yPos + 70; // 80 é um espaço reservado para assinatura e data (2-3 linhas)
-
-            // Calcular a altura total dos itens de conteúdo
-            float totalOriginalContentHeight = contentItems.Sum(item => item.OriginalHeight);
-            float scaleFactor = availableHeight / totalOriginalContentHeight;
-
-            foreach (var item in contentItems)
-            {
-                float newWidth = pageWidth + e.MarginBounds.Left + 20;  /*(item.OriginalWidth) * scaleFactor;*/
-                float newHeight = item.OriginalHeight * scaleFactor + 3;
-
-                // Verificar se a nova altura excede a altura disponível
-                if (yPos + newHeight > e.MarginBounds.Bottom)
-                {
-                    e.HasMorePages = true; // Indicar que há mais páginas
-                    return yPos; // Retornar a posição atual
-                }
-
-                // Centralizar horizontalmente
-                float imageXPos = e.MarginBounds.Left + (pageWidth - newWidth) / 2;
-
-                e.Graphics.DrawImage(item.Image, imageXPos, yPos, newWidth, newHeight);
-                yPos += newHeight + 10; // 10 é o espaçamento após cada imagem
-
-                // Liberar recursos da imagem
-                item.Image.Dispose();
-            }
-
-            // Ajustar a posição para a assinatura e data
-            yPos += 20; // Espaçamento antes da assinatura
-
-            return yPos; // Retornar a nova posição Y
+            graphics.DrawLine(Pens.Black, marginLeft, yPos, marginLeft + pageWidth, yPos);
+            yPos += 40; // Aumentar o espaçamento após a linha
+            return yPos;
         }
 
 
-        private float DrawSignatureAndDate(PrintPageEventArgs e, float yPos, float pageWidth, Font fonteTexto, Brush brush)
+        private float DrawSignatureAndDate(Graphics graphics, float marginLeft, float yPos, float pageHeight, float pageWidth, Font fonteTexto, Brush brush)
         {
             string assinaturaText = "Assinatura";
-            string dataMod = DataMod.Text;
+            string dataMod = DateTime.Now.ToShortDateString();
 
             // Desenhar a assinatura
-            SizeF assinaturaTextSize = e.Graphics.MeasureString(assinaturaText, fonteTexto);
+            SizeF assinaturaTextSize = graphics.MeasureString(assinaturaText, fonteTexto);
             float signatureLineWidth = pageWidth / 2;
             float totalSignatureWidth = assinaturaTextSize.Width + signatureLineWidth;
-            float signatureBlockX = e.MarginBounds.Left - 60/*+ (pageWidth - totalSignatureWidth) / 2*/;
+            float signatureBlockX = marginLeft+pageWidth/2-(totalSignatureWidth/2);
 
-            e.Graphics.DrawString(assinaturaText, fonteTexto, brush, signatureBlockX, yPos);
-            float lineY = (yPos) + assinaturaTextSize.Height / 2;
-            e.Graphics.DrawLine(Pens.Black, signatureBlockX + assinaturaTextSize.Width, lineY, signatureBlockX + assinaturaTextSize.Width + signatureLineWidth, lineY);
+             // Espaçamento após 'Assinatura'
 
-            yPos += assinaturaTextSize.Height; // Espaçamento após 'Assinatura'
+            graphics.DrawString(assinaturaText, fonteTexto, brush, signatureBlockX, yPos);
+            float lineY = yPos + assinaturaTextSize.Height / 2;
+            graphics.DrawLine(Pens.Black, signatureBlockX + assinaturaTextSize.Width, lineY, signatureBlockX + assinaturaTextSize.Width + signatureLineWidth, lineY);
+
 
             // Desenhar a data
-            if (!string.IsNullOrEmpty(dataMod))
-            {
-                SizeF dataTextSize = e.Graphics.MeasureString(dataMod, fonteTexto);
-                float dataX = (e.MarginBounds.Left - 60 + totalSignatureWidth / 2) - dataTextSize.Width / 2/*+ (pageWidth - dataTextSize.Width) / 2*/;
-                e.Graphics.DrawString(dataMod, fonteTexto, brush, dataX, yPos);
-                yPos += dataTextSize.Height + 20; // Espaçamento após a data
-            }
+           
 
-            return yPos; // Retornar a nova posição Y
+            return yPos;
         }
 
-        private void DrawBackgroundImage(PrintPageEventArgs e, float yPos, float pageWidth)
+
+        private float DrawItemsTable(Graphics graphics, float marginLeft, float yPos, float pageWidth,  Brush brush)
+        {
+            // Título da seção
+            Font fonteSubtitulo = new Font("Arial", 14, FontStyle.Bold);
+            Font fonteTexto = new Font("Arial", 11, FontStyle.Bold);
+            Font fonteTabela = new Font("Arial", 9, FontStyle.Regular);
+            graphics.DrawString("Descritivo", fonteSubtitulo, brush, marginLeft, yPos);
+            yPos += fonteSubtitulo.GetHeight(graphics) + 5; // Espaço após o título
+
+            // Definir colunas
+            int numColumns = 7;
+
+            // Definir cabeçalhos das colunas
+            var columnsToPrint = new[] {  "NomeCategoria", "NomeMarca", "NomeProduto", "iMEIDataGridViewTextBoxColumn", "precoUntDataGridViewTextBoxColumn", "quantidadeDataGridViewTextBoxColumn", "totalDataGridViewTextBoxColumn" };
+            var columnHeaders = new[] { "Categoria", "Marca", "Produto", "Código", "Preço Un", "Quantidade", "Total" };
+
+            // Calcular largura das colunas
+            float totalAvailableWidth = pageWidth; // Espaço disponível para a tabela
+            float columnWidth = totalAvailableWidth / numColumns;
+            float[] columnWidths = Enumerable.Repeat(columnWidth, numColumns).ToArray();
+
+            float xPos = marginLeft;
+            float lineHeight = fonteTexto.GetHeight(graphics) + 10;
+
+            Pen pen = Pens.Black;
+
+            // Desenhar cabeçalho da tabela
+            yPos += 5; // Espaçamento antes da tabela
+            for (int i = 0; i < numColumns; i++)
+            {
+                // Desenhar retângulo da célula do cabeçalho
+                graphics.DrawRectangle(pen, xPos, yPos, columnWidths[i], lineHeight);
+
+                // Centralizar texto no cabeçalho
+                string headerText = columnHeaders[i];
+                SizeF headerSize = graphics.MeasureString(headerText, fonteTexto);
+                float textX = xPos + (columnWidths[i] - headerSize.Width) / 2;
+                float textY = yPos + (lineHeight - headerSize.Height) / 2;
+
+                graphics.DrawString(headerText, fonteTexto, brush, textX, textY);
+                xPos += columnWidths[i];
+            }
+
+            yPos += lineHeight;
+            xPos = marginLeft;
+
+            // Desenhar linhas da tabela com os dados
+            foreach (DataGridViewRow row in DgridArtigos.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    for (int i = 0; i < numColumns; i++)
+                    {
+                        // Desenhar retângulo da célula
+                        graphics.DrawRectangle(pen, xPos, yPos, columnWidths[i], lineHeight-2);
+
+                        // Obter o valor da célula
+                        string cellValue = row.Cells[columnsToPrint[i]].Value?.ToString() ?? "";
+
+                        // Centralizar texto na célula
+                        SizeF cellSize = graphics.MeasureString(cellValue, fonteTabela);
+                        float textX = xPos + (columnWidths[i] - cellSize.Width) / 2;
+                        float textY = yPos + (lineHeight - cellSize.Height) / 2;
+
+                        graphics.DrawString(cellValue, fonteTabela, brush, textX, textY);
+                        xPos += columnWidths[i];
+                    }
+                    yPos += lineHeight;
+                    xPos = marginLeft;
+                }
+            }
+
+            yPos += 20; // Espaçamento após a tabela
+            return yPos;
+        }
+
+
+        private float DrawFinalLogo(Graphics graphics, float marginLeft, float yPos, float marginTop, float pageWidth, float pageHeight, Brush brush)
         {
             string bottomImagePath = "C:\\Users\\synys\\source\\repos\\TeleBerço\\Resources\\Morada2.jpeg";
 
@@ -947,31 +1204,16 @@ namespace TeleBerço
                     float bottomImgHeight = bottomImage.Height * (desiredBottomImgWidth / bottomImage.Width) - 75;
 
                     // Posicionar a imagem no fundo da página, centralizada horizontalmente
-                    float bottomImageX = (e.MarginBounds.Left + pageWidth + 70) - desiredBottomImgWidth;
-                    float bottomImageYPosition = e.MarginBounds.Top + e.MarginBounds.Height - bottomImgHeight + 110;
+                    float bottomImageX = marginLeft + pageWidth - desiredBottomImgWidth;
+                    float bottomImageYPosition = marginTop + pageHeight - bottomImgHeight; // Posicionar logo após o último conteúdo
 
-                    e.Graphics.DrawImage(bottomImage, bottomImageX, bottomImageYPosition, desiredBottomImgWidth, bottomImgHeight);
+                    graphics.DrawImage(bottomImage, bottomImageX, bottomImageYPosition, desiredBottomImgWidth, bottomImgHeight);
+                    yPos = marginTop + pageHeight - bottomImgHeight-70;
+
                 }
             }
+            return yPos;
         }
-
-        private Bitmap CapturePanel(Panel panel)
-        {
-            if (panel == Panel2)
-            {
-                Bitmap bitmap = new Bitmap(panel.Width - 150, panel.Height - 30);
-                panel.DrawToBitmap(bitmap, new Rectangle(0, 0, panel.Width, panel.Height));
-                return bitmap;
-
-            }
-            else
-            {
-                Bitmap bitmap = new Bitmap(panel.Width - 20, panel.Height - 10);
-                panel.DrawToBitmap(bitmap, new Rectangle(0, 0, panel.Width, panel.Height));
-                return bitmap;
-            }
-        }
-
 
         #endregion
 
@@ -979,6 +1221,7 @@ namespace TeleBerço
         {
             AbrirSelecaoClientes();
         }
+        
 
         private void btnNovoCliente_Click(object sender, EventArgs e)
         {
@@ -1043,11 +1286,12 @@ namespace TeleBerço
 
                 if (frmDados.RowSelecionada is DsProdutos.ProdutosRow produtoRow)
                 {
+                    dsProdutos.NovoArtigo();
                     txtEquipNome.Text = produtoRow.NomeProduto;
-                    txtCat.SelectedValue = produtoRow.Categorias;
-                    txtMarca.SelectedValue = produtoRow.Marcas;
+                    txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
+                    txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
                     txtImei.Text = produtoRow.IMEI;
-                    txtObservacoes.Text = produtoRow.Observacao;
+                  
                     HabilitarProduto();
                 }
             }
