@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:Marcas" ZOrder="6" X="534" Y="188" Height="115" Width="186" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
     <Shape ID="DesignTable:Categorias" ZOrder="5" X="1083" Y="221" Height="115" Width="206" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
     <Shape ID="DesignTable:Produtos" ZOrder="1" X="776" Y="288" Height="362" Width="272" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="24" OldDataTableHeight="0" SplitterPosition="235" />
-    <Shape ID="DesignSources:QuerryProdutosTableAdapter" ZOrder="4" X="379" Y="460" Height="124" Width="250" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="120" />
+    <Shape ID="DesignSources:QuerryProdutosTableAdapter" ZOrder="4" X="379" Y="460" Height="105" Width="237" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="101" />
   </Shapes>
   <Connectors>
     <Connector ID="DesignRelation:Produtos_Categoria_FK1" ZOrder="3" LineWidth="11">

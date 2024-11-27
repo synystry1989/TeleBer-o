@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDocumentos));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.tsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.tsProdutos = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,10 +46,11 @@
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsConsultarDocumentos = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsAddCategorias = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsDocumentos = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsConsultaCliente = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMarca = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsAddMarcas = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMarcas = new System.Windows.Forms.ToolStripMenuItem();
             this.tsNovoDoc = new System.Windows.Forms.ToolStripMenuItem();
             this.tsGravarDoc = new System.Windows.Forms.ToolStripMenuItem();
             this.tsImprimir = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +61,20 @@
             this.btnAbrirPr = new System.Windows.Forms.Button();
             this.BtnEliminar = new System.Windows.Forms.Button();
             this.DgridArtigos = new System.Windows.Forms.DataGridView();
+            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Observacao = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cabProdutoIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.produtoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Marca = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Categoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.numLInhaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeMarca = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NomeProduto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iMEIDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.precoUntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantidadeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listaProdutosBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dsDocumentos = new TeleBerço.DsDocumentos();
             this.BtnNovo = new System.Windows.Forms.Button();
@@ -110,19 +125,7 @@
             this.btnNovoCliente = new System.Windows.Forms.Button();
             this.BtnGravarCliente = new System.Windows.Forms.Button();
             this.btnAbrirCliente = new System.Windows.Forms.Button();
-            this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cabProdutoIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.produtoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Marca = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Categoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.numLInhaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomeCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomeMarca = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NomeProduto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iMEIDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.precoUntDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.quantidadeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtCodPr = new System.Windows.Forms.TextBox();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgridArtigos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.listaProdutosBindingSource)).BeginInit();
@@ -161,7 +164,7 @@
             this.toolStripMenuItem1,
             this.toolStripMenuItem6,
             this.toolStripMenuItem4,
-            this.tsDocumentos});
+            this.tsMarca});
             this.tsMenu.Image = ((System.Drawing.Image)(resources.GetObject("tsMenu.Image")));
             this.tsMenu.Margin = new System.Windows.Forms.Padding(0, 0, 30, 0);
             this.tsMenu.Name = "tsMenu";
@@ -265,7 +268,7 @@
             // 
             this.toolStripMenuItem4.BackColor = System.Drawing.Color.Black;
             this.toolStripMenuItem4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem8,
+            this.tsAddCategorias,
             this.toolStripMenuItem10});
             this.toolStripMenuItem4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItem4.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -274,15 +277,16 @@
             this.toolStripMenuItem4.Size = new System.Drawing.Size(174, 26);
             this.toolStripMenuItem4.Text = "Categorias";
             // 
-            // toolStripMenuItem8
+            // tsAddCategorias
             // 
-            this.toolStripMenuItem8.BackColor = System.Drawing.Color.Black;
-            this.toolStripMenuItem8.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItem8.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.toolStripMenuItem8.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem8.Image")));
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(128, 22);
-            this.toolStripMenuItem8.Text = "Adicionar";
+            this.tsAddCategorias.BackColor = System.Drawing.Color.Black;
+            this.tsAddCategorias.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsAddCategorias.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.tsAddCategorias.Image = ((System.Drawing.Image)(resources.GetObject("tsAddCategorias.Image")));
+            this.tsAddCategorias.Name = "tsAddCategorias";
+            this.tsAddCategorias.Size = new System.Drawing.Size(128, 22);
+            this.tsAddCategorias.Text = "Adicionar";
+            this.tsAddCategorias.Click += new System.EventHandler(this.tsAddCategorias_Click);
             // 
             // toolStripMenuItem10
             // 
@@ -293,28 +297,42 @@
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
             this.toolStripMenuItem10.Size = new System.Drawing.Size(128, 22);
             this.toolStripMenuItem10.Text = "Consultar";
+            this.toolStripMenuItem10.Click += new System.EventHandler(this.toolStripMenuItem10_Click);
             // 
-            // tsDocumentos
+            // tsMarca
             // 
-            this.tsDocumentos.BackColor = System.Drawing.Color.Black;
-            this.tsDocumentos.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsConsultaCliente});
-            this.tsDocumentos.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tsDocumentos.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.tsDocumentos.Image = ((System.Drawing.Image)(resources.GetObject("tsDocumentos.Image")));
-            this.tsDocumentos.Name = "tsDocumentos";
-            this.tsDocumentos.Size = new System.Drawing.Size(174, 26);
-            this.tsDocumentos.Text = "Marcas";
+            this.tsMarca.BackColor = System.Drawing.Color.Black;
+            this.tsMarca.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsAddMarcas,
+            this.tsMarcas});
+            this.tsMarca.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsMarca.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.tsMarca.Image = ((System.Drawing.Image)(resources.GetObject("tsMarca.Image")));
+            this.tsMarca.Name = "tsMarca";
+            this.tsMarca.Size = new System.Drawing.Size(174, 26);
+            this.tsMarca.Text = "Marcas";
             // 
-            // tsConsultaCliente
+            // tsAddMarcas
             // 
-            this.tsConsultaCliente.BackColor = System.Drawing.Color.Black;
-            this.tsConsultaCliente.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tsConsultaCliente.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.tsConsultaCliente.Image = ((System.Drawing.Image)(resources.GetObject("tsConsultaCliente.Image")));
-            this.tsConsultaCliente.Name = "tsConsultaCliente";
-            this.tsConsultaCliente.Size = new System.Drawing.Size(127, 22);
-            this.tsConsultaCliente.Text = "Consultar";
+            this.tsAddMarcas.BackColor = System.Drawing.Color.Black;
+            this.tsAddMarcas.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsAddMarcas.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.tsAddMarcas.Image = ((System.Drawing.Image)(resources.GetObject("tsAddMarcas.Image")));
+            this.tsAddMarcas.Name = "tsAddMarcas";
+            this.tsAddMarcas.Size = new System.Drawing.Size(128, 22);
+            this.tsAddMarcas.Text = "Adicionar";
+            this.tsAddMarcas.Click += new System.EventHandler(this.tsAddMarcas_Click);
+            // 
+            // tsMarcas
+            // 
+            this.tsMarcas.BackColor = System.Drawing.Color.Black;
+            this.tsMarcas.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsMarcas.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.tsMarcas.Image = ((System.Drawing.Image)(resources.GetObject("tsMarcas.Image")));
+            this.tsMarcas.Name = "tsMarcas";
+            this.tsMarcas.Size = new System.Drawing.Size(128, 22);
+            this.tsMarcas.Text = "Consultar";
+            this.tsMarcas.Click += new System.EventHandler(this.tsMarcas_Click);
             // 
             // tsNovoDoc
             // 
@@ -460,27 +478,28 @@
             // DgridArtigos
             // 
             this.DgridArtigos.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
-            this.DgridArtigos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            this.DgridArtigos.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             this.DgridArtigos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DgridArtigos.AutoGenerateColumns = false;
             this.DgridArtigos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.DgridArtigos.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgridArtigos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgridArtigos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.DgridArtigos.ColumnHeadersHeight = 30;
             this.DgridArtigos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iDDataGridViewTextBoxColumn,
+            this.Observacao,
             this.cabProdutoIDDataGridViewTextBoxColumn,
             this.produtoDataGridViewTextBoxColumn,
             this.Marca,
@@ -494,36 +513,126 @@
             this.quantidadeDataGridViewTextBoxColumn,
             this.totalDataGridViewTextBoxColumn});
             this.DgridArtigos.DataSource = this.listaProdutosBindingSource;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgridArtigos.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgridArtigos.DefaultCellStyle = dataGridViewCellStyle8;
             this.DgridArtigos.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.DgridArtigos.Location = new System.Drawing.Point(0, 382);
             this.DgridArtigos.Name = "DgridArtigos";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DgridArtigos.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DgridArtigos.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DgridArtigos.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DgridArtigos.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.ControlDark;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DgridArtigos.RowsDefaultCellStyle = dataGridViewCellStyle10;
             this.DgridArtigos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DgridArtigos.Size = new System.Drawing.Size(1583, 73);
             this.DgridArtigos.TabIndex = 9;
             this.DgridArtigos.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgridArtigos_RowLeave);
+            // 
+            // iDDataGridViewTextBoxColumn
+            // 
+            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
+            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
+            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
+            this.iDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // Observacao
+            // 
+            this.Observacao.DataPropertyName = "Observacao";
+            this.Observacao.HeaderText = "Observacao";
+            this.Observacao.Name = "Observacao";
+            this.Observacao.Visible = false;
+            // 
+            // cabProdutoIDDataGridViewTextBoxColumn
+            // 
+            this.cabProdutoIDDataGridViewTextBoxColumn.DataPropertyName = "CabProdutoID";
+            this.cabProdutoIDDataGridViewTextBoxColumn.HeaderText = "CabProdutoID";
+            this.cabProdutoIDDataGridViewTextBoxColumn.Name = "cabProdutoIDDataGridViewTextBoxColumn";
+            this.cabProdutoIDDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // produtoDataGridViewTextBoxColumn
+            // 
+            this.produtoDataGridViewTextBoxColumn.DataPropertyName = "Produto";
+            this.produtoDataGridViewTextBoxColumn.HeaderText = "Produto";
+            this.produtoDataGridViewTextBoxColumn.Name = "produtoDataGridViewTextBoxColumn";
+            this.produtoDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // Marca
+            // 
+            this.Marca.DataPropertyName = "Marca";
+            this.Marca.HeaderText = "Marca";
+            this.Marca.Name = "Marca";
+            this.Marca.Visible = false;
+            // 
+            // Categoria
+            // 
+            this.Categoria.DataPropertyName = "Categoria";
+            this.Categoria.HeaderText = "Categoria";
+            this.Categoria.Name = "Categoria";
+            this.Categoria.Visible = false;
+            // 
+            // numLInhaDataGridViewTextBoxColumn
+            // 
+            this.numLInhaDataGridViewTextBoxColumn.DataPropertyName = "NumLInha";
+            this.numLInhaDataGridViewTextBoxColumn.HeaderText = "NumLInha";
+            this.numLInhaDataGridViewTextBoxColumn.Name = "numLInhaDataGridViewTextBoxColumn";
+            // 
+            // NomeCategoria
+            // 
+            this.NomeCategoria.DataPropertyName = "NomeCategoria";
+            this.NomeCategoria.HeaderText = "Categoria";
+            this.NomeCategoria.Name = "NomeCategoria";
+            // 
+            // NomeMarca
+            // 
+            this.NomeMarca.DataPropertyName = "NomeMarca";
+            this.NomeMarca.HeaderText = "Marca";
+            this.NomeMarca.Name = "NomeMarca";
+            // 
+            // NomeProduto
+            // 
+            this.NomeProduto.DataPropertyName = "NomeProduto";
+            this.NomeProduto.HeaderText = "Produto";
+            this.NomeProduto.Name = "NomeProduto";
+            // 
+            // iMEIDataGridViewTextBoxColumn
+            // 
+            this.iMEIDataGridViewTextBoxColumn.DataPropertyName = "IMEI";
+            this.iMEIDataGridViewTextBoxColumn.HeaderText = "IMEI";
+            this.iMEIDataGridViewTextBoxColumn.Name = "iMEIDataGridViewTextBoxColumn";
+            // 
+            // precoUntDataGridViewTextBoxColumn
+            // 
+            this.precoUntDataGridViewTextBoxColumn.DataPropertyName = "PrecoUnt";
+            this.precoUntDataGridViewTextBoxColumn.HeaderText = "Preco Unt";
+            this.precoUntDataGridViewTextBoxColumn.Name = "precoUntDataGridViewTextBoxColumn";
+            // 
+            // quantidadeDataGridViewTextBoxColumn
+            // 
+            this.quantidadeDataGridViewTextBoxColumn.DataPropertyName = "Quantidade";
+            this.quantidadeDataGridViewTextBoxColumn.HeaderText = "Quantidade";
+            this.quantidadeDataGridViewTextBoxColumn.Name = "quantidadeDataGridViewTextBoxColumn";
+            // 
+            // totalDataGridViewTextBoxColumn
+            // 
+            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
+            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
+            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
             // 
             // listaProdutosBindingSource
             // 
@@ -852,6 +961,7 @@
             // 
             this.panel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.panel3.Controls.Add(this.txtCodPr);
             this.panel3.Controls.Add(this.label16);
             this.panel3.Controls.Add(this.cBoxEuro);
             this.panel3.Controls.Add(this.label15);
@@ -933,6 +1043,7 @@
             this.cBoxPercent.TabIndex = 125;
             this.cBoxPercent.Text = "%";
             this.cBoxPercent.UseVisualStyleBackColor = true;
+            this.cBoxPercent.CheckedChanged += new System.EventHandler(this.cBoxPercent_CheckedChanged);
             // 
             // txtDesconto
             // 
@@ -945,6 +1056,7 @@
             this.txtDesconto.Size = new System.Drawing.Size(139, 29);
             this.txtDesconto.TabIndex = 124;
             this.txtDesconto.Text = "0";
+            this.txtDesconto.TextChanged += new System.EventHandler(this.txtDesconto_TextChanged_1);
             // 
             // txtTipoPr
             // 
@@ -968,15 +1080,10 @@
             this.txtEstado.Enabled = false;
             this.txtEstado.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEstado.FormattingEnabled = true;
-            this.txtEstado.Items.AddRange(new object[] {
-            "Em preparacao",
-            "Pronto",
-            "Em espera"});
             this.txtEstado.Location = new System.Drawing.Point(1259, 112);
             this.txtEstado.Name = "txtEstado";
             this.txtEstado.Size = new System.Drawing.Size(287, 29);
             this.txtEstado.TabIndex = 22;
-            this.txtEstado.SelectedValueChanged += new System.EventHandler(this.txtEstado_SelectedValueChanged);
             // 
             // label11
             // 
@@ -1171,88 +1278,15 @@
             this.btnAbrirCliente.UseVisualStyleBackColor = false;
             this.btnAbrirCliente.Click += new System.EventHandler(this.btnAbrirCliente_Click_1);
             // 
-            // iDDataGridViewTextBoxColumn
+            // txtCodPr
             // 
-            this.iDDataGridViewTextBoxColumn.DataPropertyName = "ID";
-            this.iDDataGridViewTextBoxColumn.HeaderText = "ID";
-            this.iDDataGridViewTextBoxColumn.Name = "iDDataGridViewTextBoxColumn";
-            this.iDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // cabProdutoIDDataGridViewTextBoxColumn
-            // 
-            this.cabProdutoIDDataGridViewTextBoxColumn.DataPropertyName = "CabProdutoID";
-            this.cabProdutoIDDataGridViewTextBoxColumn.HeaderText = "CabProdutoID";
-            this.cabProdutoIDDataGridViewTextBoxColumn.Name = "cabProdutoIDDataGridViewTextBoxColumn";
-            this.cabProdutoIDDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // produtoDataGridViewTextBoxColumn
-            // 
-            this.produtoDataGridViewTextBoxColumn.DataPropertyName = "Produto";
-            this.produtoDataGridViewTextBoxColumn.HeaderText = "Produto";
-            this.produtoDataGridViewTextBoxColumn.Name = "produtoDataGridViewTextBoxColumn";
-            this.produtoDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // Marca
-            // 
-            this.Marca.DataPropertyName = "Marca";
-            this.Marca.HeaderText = "Marca";
-            this.Marca.Name = "Marca";
-            this.Marca.Visible = false;
-            // 
-            // Categoria
-            // 
-            this.Categoria.DataPropertyName = "Categoria";
-            this.Categoria.HeaderText = "Categoria";
-            this.Categoria.Name = "Categoria";
-            this.Categoria.Visible = false;
-            // 
-            // numLInhaDataGridViewTextBoxColumn
-            // 
-            this.numLInhaDataGridViewTextBoxColumn.DataPropertyName = "NumLInha";
-            this.numLInhaDataGridViewTextBoxColumn.HeaderText = "NumLInha";
-            this.numLInhaDataGridViewTextBoxColumn.Name = "numLInhaDataGridViewTextBoxColumn";
-            // 
-            // NomeCategoria
-            // 
-            this.NomeCategoria.DataPropertyName = "NomeCategoria";
-            this.NomeCategoria.HeaderText = "Categoria";
-            this.NomeCategoria.Name = "NomeCategoria";
-            // 
-            // NomeMarca
-            // 
-            this.NomeMarca.DataPropertyName = "NomeMarca";
-            this.NomeMarca.HeaderText = "Marca";
-            this.NomeMarca.Name = "NomeMarca";
-            // 
-            // NomeProduto
-            // 
-            this.NomeProduto.DataPropertyName = "NomeProduto";
-            this.NomeProduto.HeaderText = "Produto";
-            this.NomeProduto.Name = "NomeProduto";
-            // 
-            // iMEIDataGridViewTextBoxColumn
-            // 
-            this.iMEIDataGridViewTextBoxColumn.DataPropertyName = "IMEI";
-            this.iMEIDataGridViewTextBoxColumn.HeaderText = "IMEI";
-            this.iMEIDataGridViewTextBoxColumn.Name = "iMEIDataGridViewTextBoxColumn";
-            // 
-            // precoUntDataGridViewTextBoxColumn
-            // 
-            this.precoUntDataGridViewTextBoxColumn.DataPropertyName = "PrecoUnt";
-            this.precoUntDataGridViewTextBoxColumn.HeaderText = "Preco Unt";
-            this.precoUntDataGridViewTextBoxColumn.Name = "precoUntDataGridViewTextBoxColumn";
-            // 
-            // quantidadeDataGridViewTextBoxColumn
-            // 
-            this.quantidadeDataGridViewTextBoxColumn.DataPropertyName = "Quantidade";
-            this.quantidadeDataGridViewTextBoxColumn.HeaderText = "Quantidade";
-            this.quantidadeDataGridViewTextBoxColumn.Name = "quantidadeDataGridViewTextBoxColumn";
-            // 
-            // totalDataGridViewTextBoxColumn
-            // 
-            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
-            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
-            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
+            this.txtCodPr.Enabled = false;
+            this.txtCodPr.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodPr.Location = new System.Drawing.Point(126, 28);
+            this.txtCodPr.Name = "txtCodPr";
+            this.txtCodPr.Size = new System.Drawing.Size(81, 29);
+            this.txtCodPr.TabIndex = 130;
+            this.txtCodPr.Visible = false;
             // 
             // FrmDocumentos
             // 
@@ -1306,7 +1340,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsProdutos;
         private System.Windows.Forms.ToolStripMenuItem tsAddProduto;
         private System.Windows.Forms.ToolStripMenuItem tsConsultaProduto;
-        private System.Windows.Forms.ToolStripMenuItem tsDocumentos;
+        private System.Windows.Forms.ToolStripMenuItem tsMarca;
         private System.Windows.Forms.ToolStripMenuItem tsNovoDoc;
         private System.Windows.Forms.ToolStripMenuItem tsGravarDoc;
         private System.Windows.Forms.ToolStripMenuItem tsSair;
@@ -1350,7 +1384,7 @@
         private System.Windows.Forms.Button btnNovoCliente;
         private System.Windows.Forms.Button BtnGravarCliente;
         private System.Windows.Forms.Button btnAbrirCliente;
-        private System.Windows.Forms.ToolStripMenuItem tsConsultaCliente;
+        private System.Windows.Forms.ToolStripMenuItem tsMarcas;
         internal System.Windows.Forms.ComboBox txtCat;
         internal System.Windows.Forms.Label label11;
         internal System.Windows.Forms.Label label14;
@@ -1368,7 +1402,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem tsConsultarDocumentos;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
+        private System.Windows.Forms.ToolStripMenuItem tsAddCategorias;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
         private DsDocumentos dsDocumentos;
         private System.Windows.Forms.BindingSource listaProdutosBindingSource;
@@ -1376,7 +1410,9 @@
         private DsProdutos dsProdutos;
         private System.Windows.Forms.BindingSource categoriasBindingSource;
         private System.Windows.Forms.BindingSource marcasBindingSource;
+        private System.Windows.Forms.ToolStripMenuItem tsAddMarcas;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Observacao;
         private System.Windows.Forms.DataGridViewTextBoxColumn cabProdutoIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn produtoDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Marca;
@@ -1389,6 +1425,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn precoUntDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn quantidadeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalDataGridViewTextBoxColumn;
+        internal System.Windows.Forms.TextBox txtCodPr;
     }
 }
 

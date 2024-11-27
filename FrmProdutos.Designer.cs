@@ -83,7 +83,7 @@
             this.PainelCliente.Controls.Add(this.TxtNomeProduto);
             this.PainelCliente.Controls.Add(this.LblProduto);
             this.PainelCliente.Location = new System.Drawing.Point(14, 60);
-            this.PainelCliente.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PainelCliente.Margin = new System.Windows.Forms.Padding(4);
             this.PainelCliente.Name = "PainelCliente";
             this.PainelCliente.Size = new System.Drawing.Size(913, 376);
             this.PainelCliente.TabIndex = 34;
@@ -100,10 +100,10 @@
             "Cliente",
             "Serviços"});
             this.txtTipoPr.Location = new System.Drawing.Point(601, 186);
-            this.txtTipoPr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtTipoPr.Margin = new System.Windows.Forms.Padding(4);
             this.txtTipoPr.Name = "txtTipoPr";
             this.txtTipoPr.Size = new System.Drawing.Size(246, 25);
-            this.txtTipoPr.TabIndex = 31;
+            this.txtTipoPr.TabIndex = 6;
             // 
             // label4
             // 
@@ -120,25 +120,29 @@
             // 
             this.txtModelo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtModelo.DisplayMember = "CodCat";
             this.txtModelo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtModelo.FormattingEnabled = true;
             this.txtModelo.Location = new System.Drawing.Point(601, 131);
-            this.txtModelo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtModelo.Margin = new System.Windows.Forms.Padding(4);
             this.txtModelo.Name = "txtModelo";
             this.txtModelo.Size = new System.Drawing.Size(246, 25);
-            this.txtModelo.TabIndex = 29;
+            this.txtModelo.TabIndex = 4;
             this.txtModelo.ValueMember = "CodCat";
+            this.txtModelo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtModelo_KeyDown);
             // 
             // txtMarca
             // 
+            this.txtMarca.DisplayMember = "ID";
             this.txtMarca.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMarca.FormattingEnabled = true;
             this.txtMarca.Location = new System.Drawing.Point(217, 131);
-            this.txtMarca.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMarca.Margin = new System.Windows.Forms.Padding(4);
             this.txtMarca.Name = "txtMarca";
             this.txtMarca.Size = new System.Drawing.Size(254, 25);
-            this.txtMarca.TabIndex = 28;
+            this.txtMarca.TabIndex = 3;
             this.txtMarca.ValueMember = "ID";
+            this.txtMarca.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMarca_KeyDown);
             // 
             // label3
             // 
@@ -159,7 +163,7 @@
             this.txtImei.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.txtImei.Name = "txtImei";
             this.txtImei.Size = new System.Drawing.Size(254, 27);
-            this.txtImei.TabIndex = 26;
+            this.txtImei.TabIndex = 5;
             // 
             // label2
             // 
@@ -188,7 +192,7 @@
             this.TxtCodigoPr.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TxtCodigoPr.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtCodigoPr.Location = new System.Drawing.Point(217, 69);
-            this.TxtCodigoPr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TxtCodigoPr.Margin = new System.Windows.Forms.Padding(4);
             this.TxtCodigoPr.Name = "TxtCodigoPr";
             this.TxtCodigoPr.Size = new System.Drawing.Size(138, 27);
             this.TxtCodigoPr.TabIndex = 1;
@@ -233,10 +237,10 @@
             this.TxtCusto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TxtCusto.Font = new System.Drawing.Font("Lucida Sans Unicode", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtCusto.Location = new System.Drawing.Point(217, 248);
-            this.TxtCusto.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TxtCusto.Margin = new System.Windows.Forms.Padding(4);
             this.TxtCusto.Name = "TxtCusto";
             this.TxtCusto.Size = new System.Drawing.Size(255, 27);
-            this.TxtCusto.TabIndex = 4;
+            this.TxtCusto.TabIndex = 7;
             // 
             // TxtPreco
             // 
@@ -246,7 +250,7 @@
             this.TxtPreco.Margin = new System.Windows.Forms.Padding(6, 4, 6, 4);
             this.TxtPreco.Name = "TxtPreco";
             this.TxtPreco.Size = new System.Drawing.Size(254, 27);
-            this.TxtPreco.TabIndex = 5;
+            this.TxtPreco.TabIndex = 8;
             // 
             // LblNome
             // 
@@ -281,7 +285,7 @@
             this.TxtObservacao.Multiline = true;
             this.TxtObservacao.Name = "TxtObservacao";
             this.TxtObservacao.Size = new System.Drawing.Size(246, 97);
-            this.TxtObservacao.TabIndex = 3;
+            this.TxtObservacao.TabIndex = 9;
             // 
             // TxtNomeProduto
             // 
@@ -317,13 +321,14 @@
             this.BtnEliminar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnEliminar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BtnEliminar.Location = new System.Drawing.Point(196, 16);
-            this.BtnEliminar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BtnEliminar.Margin = new System.Windows.Forms.Padding(4);
             this.BtnEliminar.Name = "BtnEliminar";
             this.BtnEliminar.Size = new System.Drawing.Size(84, 37);
             this.BtnEliminar.TabIndex = 50;
             this.BtnEliminar.Text = "Eliminar";
             this.BtnEliminar.UseCompatibleTextRendering = true;
             this.BtnEliminar.UseVisualStyleBackColor = false;
+            this.BtnEliminar.Click += new System.EventHandler(this.BtnEliminar_Click);
             // 
             // BtnNovo
             // 
@@ -336,10 +341,10 @@
             this.BtnNovo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnNovo.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BtnNovo.Location = new System.Drawing.Point(14, 16);
-            this.BtnNovo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BtnNovo.Margin = new System.Windows.Forms.Padding(4);
             this.BtnNovo.Name = "BtnNovo";
             this.BtnNovo.Size = new System.Drawing.Size(84, 37);
-            this.BtnNovo.TabIndex = 49;
+            this.BtnNovo.TabIndex = 1;
             this.BtnNovo.Text = "Novo";
             this.BtnNovo.UseCompatibleTextRendering = true;
             this.BtnNovo.UseVisualStyleBackColor = false;
@@ -356,7 +361,7 @@
             this.BtnSair.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnSair.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BtnSair.Location = new System.Drawing.Point(287, 16);
-            this.BtnSair.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BtnSair.Margin = new System.Windows.Forms.Padding(4);
             this.BtnSair.Name = "BtnSair";
             this.BtnSair.Size = new System.Drawing.Size(84, 37);
             this.BtnSair.TabIndex = 48;
@@ -376,7 +381,7 @@
             this.BtnGravar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BtnGravar.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.BtnGravar.Location = new System.Drawing.Point(105, 16);
-            this.BtnGravar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BtnGravar.Margin = new System.Windows.Forms.Padding(4);
             this.BtnGravar.Name = "BtnGravar";
             this.BtnGravar.Size = new System.Drawing.Size(84, 37);
             this.BtnGravar.TabIndex = 47;
@@ -398,7 +403,7 @@
             this.Controls.Add(this.PainelCliente);
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "FrmProdutos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

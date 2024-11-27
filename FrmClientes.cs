@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using TeleBerço;
-using TeleBerço.DsClientesTableAdapters;
+using static TeleBerço.DsClientes;
 
 namespace TeleBerço
 {
     public partial class FrmClientes : Form
     {
         private DsClientes dsClientes = new DsClientes();
-        private ClientesTableAdapter clientesTableAdapter = new ClientesTableAdapter();
+
         private FrmDados frmDados = new FrmDados();
         public DataRow RowSelecionada { get; set; }
 
         public FrmClientes()
         {
             InitializeComponent();
-           
         }
 
         private void FrmClientes_Load(object sender, EventArgs e)
@@ -35,13 +33,10 @@ namespace TeleBerço
         {
             try
             {
-                var clienteRow = (DsClientes.ClientesRow)RowSelecionada;
+                var clienteRow = (ClientesRow)RowSelecionada;
                 TxtCodigoCl.Text = clienteRow.CodCl;
-                TxtNomeCl.Text = clienteRow.Nome;
-                TxtTelefone.Text = clienteRow.Telefone;
-                TxtEmail.Text = clienteRow.Email;
+                PreencherCliente();
 
-                HabilitarCampos();
             }
             catch (Exception ex)
             {
@@ -51,38 +46,44 @@ namespace TeleBerço
 
         private void PrepararNovoCliente()
         {
-            LimparFormulario();
-            DesabilitarCampos();
-            TxtCodigoCl.Text = "CL";
+            try
+            {
+                dsClientes.NovoCliente();
+                LimparFormulario();              
+                TxtCodigoCl.Text = dsClientes.DaProxNrCliente();
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao preparar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-    
         private void PreencherCliente()
         {
-            if (!string.IsNullOrEmpty(TxtCodigoCl.Text))
+            try
             {
                 var clienteRow = dsClientes.PesquisaCliente(TxtCodigoCl.Text);
 
-                if ((clienteRow != null) && (clienteRow.CodCl!=""))
-
+                if (clienteRow.CodCl != dsClientes.DaProxNrCliente())
                 {
                     TxtNomeCl.Text = clienteRow.Nome;
                     TxtTelefone.Text = clienteRow.Telefone;
                     TxtEmail.Text = clienteRow.Email;
-                    HabilitarCampos();
+
+                    TxtCodigoCl.Focus();
                 }
                 else
                 {
-                    MessageBox.Show("Cliente não encontrado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     LimparFormulario();
-                    DesabilitarCampos();
-                    TxtCodigoCl.Text ="CL";
+                    TxtCodigoCl.Text = clienteRow.CodCl;
                 }
             }
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao preencher cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-      
-       
 
         private void LimparFormulario()
         {
@@ -121,13 +122,9 @@ namespace TeleBerço
                    !string.IsNullOrWhiteSpace(TxtTelefone.Text);
         }
 
-      
-
         private void BtnNovo_Click(object sender, EventArgs e)
         {
-            LimparFormulario();
-            TxtCodigoCl.Text = dsClientes.DaProxNrCliente();
-            HabilitarCampos();
+            PrepararNovoCliente();
         }
 
         private void BtnGravar_Click(object sender, EventArgs e)
@@ -136,14 +133,14 @@ namespace TeleBerço
             {
                 if (ValidarPreenchimento())
                 {
-                    var novoCliente = dsClientes.Clientes.NewClientesRow();
+                    ClientesRow novoCliente = dsClientes.Clientes[0];
+
                     novoCliente.CodCl = TxtCodigoCl.Text;
                     novoCliente.Nome = TxtNomeCl.Text;
                     novoCliente.Telefone = TxtTelefone.Text;
                     novoCliente.Email = TxtEmail.Text;
 
-                    dsClientes.Clientes.AddClientesRow(novoCliente);
-                    clientesTableAdapter.Update(dsClientes.Clientes);
+                    dsClientes.UpdateClientes();
 
                     MessageBox.Show("Cliente salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparFormulario();
@@ -151,7 +148,7 @@ namespace TeleBerço
                 }
                 else
                 {
-                    MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Por favor, preencha todos os campos corretamente.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
@@ -169,24 +166,21 @@ namespace TeleBerço
                     var resultado = MessageBox.Show("Deseja realmente excluir este cliente?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (resultado == DialogResult.Yes)
+
                     {
-                        var clienteRow = dsClientes.Clientes.FindByCodCl(TxtCodigoCl.Text);
+                        TxtCodigoCl.Focus();
+                        dsClientes.EliminarCliente(TxtCodigoCl.Text);
 
-                        if (clienteRow != null)
-                        {
-                            clienteRow.Delete();
-                            clientesTableAdapter.Update(dsClientes.Clientes);
-
-                            MessageBox.Show("Cliente excluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LimparFormulario();
-                            DesabilitarCampos();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Cliente não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        MessageBox.Show("Cliente excluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LimparFormulario();
+                        DesabilitarCampos();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cliente não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+
                 else
                 {
                     MessageBox.Show("Nenhum cliente selecionado para exclusão.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -200,17 +194,24 @@ namespace TeleBerço
 
         private void BtnSair_Click(object sender, EventArgs e)
         {
-            this.Close();
+            try
+            {
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao encerrar formulario: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
-          
         private void TxtCodigoCl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F4)
+            if (e.KeyCode == Keys.F4) 
             {
+                frmDados.MostrarTabelaDados("DsClientes");
                 if (frmDados.DialogResult == DialogResult.OK)
                 {
-                    frmDados.MostrarTabelaDados("DsClientes");
                     CarregarClienteSelecionado();
                 }
             }
@@ -221,6 +222,6 @@ namespace TeleBerço
             PreencherCliente();
         }
 
-      
+
     }
 }

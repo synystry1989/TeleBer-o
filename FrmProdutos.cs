@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
-using TeleBerço.DsProdutosTableAdapters;
+using static TeleBerço.DsProdutos;
 
 namespace TeleBerço
 {
@@ -11,115 +10,50 @@ namespace TeleBerço
         public DataRow RowSelecionada { get; set; }
         private FrmDados frmDados = new FrmDados();
         private DsProdutos dsArtigos = new DsProdutos();
-        private ProdutosTableAdapter produtosTableAdapter = new ProdutosTableAdapter();
+
 
         public FrmProdutos()
         {
             InitializeComponent();
-        
         }
 
         private void FrmProdutos_Load(object sender, EventArgs e)
         {
             CarregarMarcasECategorias();
-
+            TxtCodigoPr.Focus();
             if (RowSelecionada != null)
             {
+                dsArtigos.CarregaArtigos();
                 CarregarProdutoSelecionado();
                 HabilitarCampos();
             }
             else
             {
                 PrepararNovoProduto();
-                DesabilitarCampos();
             }
+
         }
-       
+
         private void CarregarMarcasECategorias()
-        {
-            dsArtigos.CarregaCategorias();
-            dsArtigos.CarregarMarcas();
-
-            txtMarca.DataSource = dsArtigos.Marcas;
-            txtMarca.DisplayMember = "Nome";
-            txtMarca.ValueMember = "Id";
-
-            txtModelo.DataSource = dsArtigos.Categorias;
-            txtModelo.DisplayMember = "Nome";
-            txtModelo.ValueMember = "CodCat";
-        }
-
-     
-
-        private void CarregarProdutoSelecionado()
         {
             try
             {
-                var produtoRow = (DsProdutos.ProdutosRow)RowSelecionada;
+                dsArtigos.CarregaCategorias();
+                dsArtigos.CarregarMarcas();
 
-                TxtCodigoPr.Text = produtoRow.CodPr;
-                TxtNomeProduto.Text = produtoRow.NomeProduto;
-                TxtObservacao.Text = produtoRow.Observacao;
-                TxtCusto.Text = produtoRow.PrecoCusto.ToString("F2");
-                TxtPreco.Text = produtoRow.PreçoVenda.ToString("F2");
-                txtImei.Text = produtoRow.IMEI;
-                txtTipoPr.Text = produtoRow.Tipo;
+                txtMarca.DataSource = dsArtigos.Marcas;
+                txtMarca.DisplayMember = "Nome";
+                txtMarca.ValueMember = "Id";
 
-                txtMarca.SelectedValue = produtoRow.Marcas;
-                txtModelo.SelectedValue = produtoRow.Categorias;
+                txtModelo.DataSource = dsArtigos.Categorias;
+                txtModelo.DisplayMember = "Nome";
+                txtModelo.ValueMember = "CodCat";
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao carregar produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void PrepararNovoProduto()
-        {
-            LimparFormulario();
-            TxtCodigoPr.Text = "PR";
-        }
-
-        private void PreencherProduto()
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(TxtCodigoPr.Text))
-                {
-                    var produtoRow = dsArtigos.PesquisarArtigo(TxtCodigoPr.Text);
-
-                    if ((produtoRow != null)&&( produtoRow.CodPr!=""))
-                    {
-                        TxtNomeProduto.Text = produtoRow.NomeProduto;
-                        TxtObservacao.Text = produtoRow.Observacao;
-                        TxtCusto.Text = produtoRow.PrecoCusto.ToString("F2");
-                        TxtPreco.Text = produtoRow.PreçoVenda.ToString("F2");
-                        txtImei.Text = produtoRow.IMEI;
-                        txtTipoPr.Text = produtoRow.Tipo;
-
-                        txtMarca.SelectedValue = produtoRow.Marcas;
-                        txtModelo.SelectedValue = produtoRow.Categorias;
-
-                        
-                    }
-                    else
-                    {
-                        MessageBox.Show("Produto não encontrado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        LimparFormulario();
-                        
-                        TxtCodigoPr.Text = dsArtigos.DaProxCodArtigo();
-                       
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao preencher produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
-   
 
         private void LimparFormulario()
         {
@@ -168,18 +102,76 @@ namespace TeleBerço
         {
             return !string.IsNullOrWhiteSpace(TxtCodigoPr.Text) &&
                    !string.IsNullOrWhiteSpace(TxtNomeProduto.Text) &&
-                   txtMarca.SelectedValue != null &&
-                   txtModelo.SelectedValue != null;
+                   !string.IsNullOrWhiteSpace(txtMarca.Text) &&
+                   !string.IsNullOrWhiteSpace(txtModelo.Text) &&
+                   !string.IsNullOrWhiteSpace(TxtCusto.Text);
+
         }
 
-     
+        private void CarregarProdutoSelecionado()
+        {
+            try
+            {
+                var produtoRow = (ProdutosRow)RowSelecionada;
+                if (produtoRow != null)
+                {
+                    TxtCodigoPr.Text = produtoRow.CodPr;
+                    PreencherProduto();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void PrepararNovoProduto()
+        {
+            try
+            {
+                dsArtigos.NovoArtigo();
+                LimparFormulario();
+                TxtCodigoPr.Text = dsArtigos.DaProxCodArtigo();
+            }
+            catch( Exception ex )
+            {
+                MessageBox.Show($"Erro ao preparar produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void PreencherProduto()
+        {
+            try
+            {
+                var produtoRow = dsArtigos.PesquisarArtigo(TxtCodigoPr.Text);
+
+                if (produtoRow.CodPr != dsArtigos.DaProxCodArtigo())
+                {
+                    TxtNomeProduto.Text = produtoRow.NomeProduto;
+                    TxtObservacao.Text = produtoRow.Observacao;
+                    TxtCusto.Text = produtoRow.PrecoCusto.ToString("F2");
+                    TxtPreco.Text = produtoRow.PreçoVenda.ToString("F2");
+                    txtImei.Text = produtoRow.IMEI;
+                    txtTipoPr.Text = produtoRow.Tipo;
+                    txtMarca.SelectedValue = produtoRow.Marcas;
+                    txtModelo.SelectedValue = produtoRow.Categorias;
+                }
+                else
+                {
+                    LimparFormulario();
+                    TxtCodigoPr.Text = produtoRow.CodPr;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao preencher produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void BtnNovo_Click(object sender, EventArgs e)
         {
             try
             {
                 PrepararNovoProduto();
-                 TxtCodigoPr.Text=dsArtigos.DaProxCodArtigo()  ;
                 HabilitarCampos();
             }
             catch (Exception ex)
@@ -194,15 +186,9 @@ namespace TeleBerço
             {
                 if (ValidarPreenchimento())
                 {
-                    var produtoRow = dsArtigos.Produtos.FindByCodPr(TxtCodigoPr.Text);
+                    ProdutosRow produtoRow = dsArtigos.Produtos[0];
 
-                    if (produtoRow == null)
-                    {
-                        produtoRow = dsArtigos.Produtos.NewProdutosRow();
-                        produtoRow.CodPr = TxtCodigoPr.Text;
-                        dsArtigos.Produtos.AddProdutosRow(produtoRow);
-                    }
-
+                    produtoRow.CodPr = TxtCodigoPr.Text;
                     produtoRow.NomeProduto = TxtNomeProduto.Text;
                     produtoRow.Observacao = TxtObservacao.Text;
                     produtoRow.PrecoCusto = decimal.Parse(TxtCusto.Text);
@@ -212,15 +198,16 @@ namespace TeleBerço
                     produtoRow.Marcas = (int)txtMarca.SelectedValue;
                     produtoRow.Categorias = txtModelo.SelectedValue.ToString();
 
-                    produtosTableAdapter.Update(dsArtigos.Produtos);
+                    dsArtigos.UpdateArtigos();
 
                     MessageBox.Show("Produto salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimparFormulario();
                     DesabilitarCampos();
+
                 }
                 else
                 {
-                    MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Por favor, preencha corretamente todos os campos .", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
@@ -231,10 +218,9 @@ namespace TeleBerço
 
         private void BtnSair_Click(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-       
         private void TxtCodigoPr_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F4)
@@ -242,19 +228,59 @@ namespace TeleBerço
                 frmDados.MostrarTabelaDados("DsArtigos");
                 if (frmDados.DialogResult == DialogResult.OK)
                 {
-                    RowSelecionada = frmDados.RowSelecionada;
                     CarregarProdutoSelecionado();
                     HabilitarCampos();
                 }
+            }
+        }
+        private void txtMarca_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F4)
+            {
+                FrmDados frmDados = new FrmDados();
+                frmDados.MostrarTabelaDados("DsMarcas");
+                dsArtigos.CarregarMarcas();
+            }
+        }
+
+        private void txtModelo_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F4)
+            {
+                FrmDados frmDados = new FrmDados();
+                frmDados.MostrarTabelaDados("DsCategorias");
+                dsArtigos.CarregaCategorias();
             }
         }
 
         private void TxtCodigoPr_Leave(object sender, EventArgs e)
         {
             PreencherProduto();
-         
         }
 
-        
+        private void BtnEliminar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var resultado = MessageBox.Show("Deseja realmente excluir este Produto?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    TxtCodigoPr.Select();
+                    dsArtigos.EliminarPr(TxtCodigoPr.Text);
+                    LimparFormulario();
+                    DesabilitarCampos();
+                    MessageBox.Show("Produto excluído com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Produto não encontrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

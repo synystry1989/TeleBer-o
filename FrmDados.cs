@@ -2,10 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using TeleBerço.DsClientesTableAdapters;
-using TeleBerço.DsDocumentosTableAdapters;
 using TeleBerço.DsProdutosTableAdapters;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace TeleBerço
 {
@@ -15,7 +12,9 @@ namespace TeleBerço
         {
             Clientes,
             Produtos,
-            Documentos
+            Documentos,
+            Marcas,
+            Categorias
         }
 
         // Datasets
@@ -24,10 +23,9 @@ namespace TeleBerço
         private DsDocumentos dsDocumentos = new DsDocumentos();
 
         // TableAdapters
-        private ClientesTableAdapter clientesTableAdapter = new ClientesTableAdapter();
-        private ProdutosTableAdapter ProdutosTableAdapter = new ProdutosTableAdapter();
+
         private QuerryProdutosTableAdapter querryProdutosTableAdapter = new QuerryProdutosTableAdapter();
-        private CabecDocumentoTableAdapter cabecDocumentoTableAdapter = new CabecDocumentoTableAdapter();
+
 
         public DataRow RowSelecionada { get; private set; }
         private TipoDados tipoDadosAtual;
@@ -36,7 +34,6 @@ namespace TeleBerço
         public FrmDados()
         {
             InitializeComponent();
-         
 
         }
 
@@ -56,118 +53,190 @@ namespace TeleBerço
                     tipoDadosAtual = TipoDados.Documentos;
                     CarregarDocumentos();
                     break;
+                case "DsCategorias":
+                    tipoDadosAtual = TipoDados.Categorias;
+                    CarregarCategorias();
+                    break;
+                case "DsMarcas":
+                    tipoDadosAtual = TipoDados.Marcas;
+                    CarregarMarcas();
+                    break;
             }
 
             ConfigurarDataGridView();
-             ConfigurarControles();
+            ConfigurarControles();
             ShowDialog();
         }
 
         private void ConfigurarControles()
         {
-            // Configura os controles de filtro e pesquisa com base no tipo de dados atual
-            cbFiltro.Items.Clear();
-            cbOrdenar.Items.Clear();
-            txtNome.Text = string.Empty;
-            dateTimePicker1.Visible = false;
-            dateTimePicker2.Visible = false;
-
-            switch (tipoDadosAtual)
+            try
             {
-                case TipoDados.Clientes:
-                    cbOrdenar.Enabled = false;
-              
-                    break;
+                // Configura os controles de filtro e pesquisa com base no tipo de dados atual
+                cbFiltro.Items.Clear();
+                cbOrdenar.Items.Clear();
+                txtNome.Text = string.Empty;
+                dateTimePicker1.Visible = false;
+                dateTimePicker2.Visible = false;
 
-                case TipoDados.Produtos:
-                    cbFiltro.Enabled = true;
-                    cbOrdenar.Items.AddRange(new string[] { "Categoria", "Marca", "Tipo" });
-                    break;
+                switch (tipoDadosAtual)
+                {
+                    case TipoDados.Clientes:
+                        cbOrdenar.Enabled = false;
 
-                case TipoDados.Documentos:
-                    cbOrdenar.Enabled = true;
-                    cbOrdenar.Items.AddRange(new string[] { "Data", "Tipo Doc", "Estado" });
-                    break;
+                        break;
+
+                    case TipoDados.Produtos:
+                        cbFiltro.Enabled = true;
+                        cbOrdenar.Items.AddRange(new string[] { "Categoria", "Marca", "Tipo" });
+                        break;
+
+                    case TipoDados.Documentos:
+                        cbOrdenar.Enabled = true;
+                        cbOrdenar.Items.AddRange(new string[] { "Data", "Tipo Doc", "Estado" });
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro nas configurações iniciais: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+
         }
-
-
         private void ConfigurarDataGridView()
         {
-            // Limpa configurações anteriores
-           
-
-            // Configurações comuns
-       
-
-            // Configurações específicas
-            switch (tipoDadosAtual)
+            try
             {
-                case TipoDados.Clientes:
-                    DgridDados.Columns["CodCl"].HeaderText = "Código Cliente";
-                    break;
+                switch (tipoDadosAtual)
+                {
+                    case TipoDados.Clientes:
+                        DgridDados.Columns["CodCl"].HeaderText = "Código Cliente";
+                        break;
 
-                case TipoDados.Produtos:
-                    DgridDados.Columns["Marcas"].Visible = false;
-                    DgridDados.Columns["Categorias"].Visible = false;
+                    case TipoDados.Produtos:
+                        DgridDados.Columns["Marcas"].Visible = false;
+                        DgridDados.Columns["Categorias"].Visible = false;
 
-                    DgridDados.Columns["PrecoCusto"].DefaultCellStyle.Format = "F2";
-                    DgridDados.Columns["PreçoVenda"].DefaultCellStyle.Format = "F2";
-                    break;
+                        DgridDados.Columns["PrecoCusto"].DefaultCellStyle.Format = "F2";
+                        DgridDados.Columns["PreçoVenda"].DefaultCellStyle.Format = "F2";
+                        break;
 
-                case TipoDados.Documentos:
-                    DgridDados.Columns["Cliente"].Visible = false;
+                    case TipoDados.Documentos:
+                        DgridDados.Columns["Cliente"].Visible = false;
 
-                    DgridDados.Columns["Total"].DefaultCellStyle.Format = "F2";
-                    DgridDados.Columns["NomeCliente"].HeaderText = "Cliente";
-                    break;
+                        DgridDados.Columns["Total"].DefaultCellStyle.Format = "F2";
+                        DgridDados.Columns["NomeCliente"].HeaderText = "Cliente";
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro nas configuracoes iniciais: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void CarregarClientes()
         {
-            dsClientes.CarregaClientes();
-            dataViewAtual = new DataView(dsClientes.Clientes);
-            DgridDados.DataSource = dataViewAtual;
+            try
+            {
+                dsClientes.CarregaClientes();
+                dataViewAtual = new DataView(dsClientes.Clientes);
+                DgridDados.DataSource = dataViewAtual;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar clientes: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
         }
 
         private void CarregarProdutos()
         {
-           dsArtigos.CarregaArtigos();
-            AdicionarDetalhesProdutos();
-            dataViewAtual = new DataView(dsArtigos.Produtos);
-            DgridDados.DataSource = dataViewAtual;
+            try
+            {
+                dsArtigos.CarregaArtigos();
+                AdicionarDetalhesProdutos();
+                dataViewAtual = new DataView(dsArtigos.Produtos);
+                DgridDados.DataSource = dataViewAtual;
+            }
+            catch
+            {
+                MessageBox.Show("Erro ao carregar Produtos", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void CarregarDocumentos()
         {
-            dsDocumentos.CarregarDocumentos();
-            AdicionarNomeClientesAosDocumentos();
-            dataViewAtual = new DataView(dsDocumentos.CabecDocumento);
-            DgridDados.DataSource = dataViewAtual;
+            try
+            {
+                dsDocumentos.CarregarDocumentos();
+                AdicionarNomeClientesAosDocumentos();
+                dataViewAtual = new DataView(dsDocumentos.CabecDocumento);
+                DgridDados.DataSource = dataViewAtual;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar Documentos", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+
+        }
+        private void CarregarCategorias()
+        {
+            try
+            {
+                dsArtigos.CarregaCategorias();
+                dataViewAtual = new DataView(dsArtigos.Categorias);
+                DgridDados.DataSource = dataViewAtual;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar Categorias", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void CarregarMarcas()
+        {
+            try
+            {
+                dsArtigos.CarregarMarcas();
+                dataViewAtual = new DataView(dsArtigos.Marcas);
+                DgridDados.DataSource = dataViewAtual;
+
+            }
+            catch
+            {
+                MessageBox.Show("Erro ao carregar Marcas", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }            
         }
 
         private void AdicionarDetalhesProdutos()
         {
             // Adiciona colunas de Marca e Categoria se não existirem
-         
-
-            foreach (DataRow row in dsArtigos.Produtos.Rows)
+            try
             {
-                // Preenche a coluna Marca
-                if (row["Marcas"] != DBNull.Value)
-                    row["Marca"] = querryProdutosTableAdapter.NomeMarca((int)row["Marcas"]);
+                foreach (DataRow row in dsArtigos.Produtos.Rows)
+                {
+                    // Preenche a coluna Marca
+                    if (row["Marcas"] != DBNull.Value)
+                        row["Marca"] = querryProdutosTableAdapter.NomeMarca((int)row["Marcas"]);
 
-                // Preenche a coluna Categoria
-                if (row["Categorias"] != DBNull.Value)
-                    row["Categoria"] = querryProdutosTableAdapter.NomeCategoria(row["Categorias"].ToString());
+                    // Preenche a coluna Categoria
+                    if (row["Categorias"] != DBNull.Value)
+                        row["Categoria"] = querryProdutosTableAdapter.NomeCategoria(row["Categorias"].ToString());
+                }
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar Marcas", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }          
         }
 
         private void AdicionarNomeClientesAosDocumentos()
         {
             // Adiciona a coluna NomeCliente se não existir
-  
+
             foreach (DataRow row in dsDocumentos.CabecDocumento.Rows)
             {
                 // Preenche a coluna NomeCliente
@@ -225,7 +294,7 @@ namespace TeleBerço
                     {
                         dataViewAtual.RowFilter = $"{campo}  = '{valor}'";
                     }
-                  
+
                     break;
             }
         }
@@ -248,7 +317,7 @@ namespace TeleBerço
             {
                 if (DgridDados.CurrentRow != null && DgridDados.CurrentRow.DataBoundItem != null)
                 {
-                    RowSelecionada = ((DataRowView)DgridDados.CurrentRow.DataBoundItem).Row;                 
+                    RowSelecionada = ((DataRowView)DgridDados.CurrentRow.DataBoundItem).Row;
                 }
             }
             catch (Exception ex)
@@ -256,13 +325,12 @@ namespace TeleBerço
                 MessageBox.Show($"Erro ao selecionar item: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-     
+
         private void EditarCliente()
         {
-
             try
-            {              
-               FrmClientes frmClientes = new FrmClientes
+            {
+                FrmClientes frmClientes = new FrmClientes
                 {
                     RowSelecionada = RowSelecionada
                 };
@@ -302,6 +370,72 @@ namespace TeleBerço
                 MessageBox.Show($"Erro ao adicionar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        private void AdicionarCategoria()
+        {
+            try
+            {
+                FrmCat_Marca frm = new FrmCat_Marca();
+                frm.tipoDadosAtual = FrmCat_Marca.TipoDados.Categorias;
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao adicionar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        private void AdicionarMarca()
+        {
+            try
+            {
+                FrmCat_Marca frm = new FrmCat_Marca();
+                frm.tipoDadosAtual = FrmCat_Marca.TipoDados.Marcas;
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao adicionar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void EditarCat()
+
+        {
+            try
+            {
+                FrmCat_Marca frm = new FrmCat_Marca
+                {
+                    RowSelecionada = RowSelecionada,
+
+                };
+                frm.tipoDadosAtual = FrmCat_Marca.TipoDados.Categorias;
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao editar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+        }
+
+        private void EditarMarca()
+
+        {
+            try
+            {
+                FrmCat_Marca frm = new FrmCat_Marca
+                {
+                    RowSelecionada = RowSelecionada
+                };
+                frm.tipoDadosAtual = FrmCat_Marca.TipoDados.Marcas;
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao editar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
+        }
 
         private void AdicionarProduto()
         {
@@ -320,11 +454,7 @@ namespace TeleBerço
         private void BtnOk_Click(object sender, EventArgs e)
         {
             SelecionarLinhaAtual();
-            if (RowSelecionada != null)
-            {
-                DialogResult = DialogResult.OK;
-            }
-
+            DialogResult = DialogResult.OK;
         }
 
         private void BtnEditar_Click(object sender, EventArgs e)
@@ -341,6 +471,15 @@ namespace TeleBerço
                     case TipoDados.Produtos:
                         EditarProduto();
                         break;
+                    case TipoDados.Categorias:
+                        EditarCat();
+
+
+                        break;
+                    case TipoDados.Marcas:
+                        EditarMarca();
+
+                        break;
                 }
             }
         }
@@ -355,10 +494,16 @@ namespace TeleBerço
                 case TipoDados.Produtos:
                     AdicionarProduto();
                     break;
+                case TipoDados.Categorias:
+                    AdicionarCategoria();
+                    break;
+                case TipoDados.Marcas:
+                    AdicionarMarca();
+                    break;
             }
         }
-           
-        
+
+
         private void BtnSair_Click(object sender, EventArgs e)
         {
             try
@@ -369,23 +514,23 @@ namespace TeleBerço
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao encerrar ", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Erro ao encerrar: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         //selecionar na grid com enter
         private void DgridDados_KeyDown_1(object sender, KeyEventArgs e)
         {
-              if (e.KeyCode == Keys.Enter)
-                {
-                    SelecionarLinhaAtual();
-                if(RowSelecionada!= null) 
+            if (e.KeyCode == Keys.Enter)
+            {
+                SelecionarLinhaAtual();
+                if (RowSelecionada != null)
                 {
                     DialogResult = DialogResult.OK;
                 }
-               
+
                 e.Handled = true;
             }
-           
+
         }
         //pesquisar entre datas pressionar enter
         private void dateTimePicker2_KeyDown(object sender, KeyEventArgs e)
@@ -399,7 +544,7 @@ namespace TeleBerço
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao Pesquisar ", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Erro ao Pesquisar, " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -455,7 +600,7 @@ namespace TeleBerço
 
             AplicarFiltro(campo, valor);
         }
-    
+
 
 
         private void button1_Click(object sender, EventArgs e)
@@ -480,6 +625,14 @@ namespace TeleBerço
                     break;
                 case TipoDados.Documentos:
                     CarregarDocumentos();
+                    break;
+                case TipoDados.Categorias:
+
+                    CarregarCategorias();
+                    break;
+                case TipoDados.Marcas:
+
+                    CarregarMarcas();
                     break;
             }
 
@@ -518,7 +671,7 @@ namespace TeleBerço
                 case TipoDados.Documentos:
                     if (campo == "Data")
                     {
-                        cbFiltro.Items.AddRange(new string[] {  "Data Entrega", "Data Rececao" }); // Ajuste conforme necessário
+                        cbFiltro.Items.AddRange(new string[] { "Data Entrega", "Data Rececao" }); // Ajuste conforme necessário
 
                         dateTimePicker1.Visible = true;
                         dateTimePicker2.Visible = true;
@@ -531,7 +684,7 @@ namespace TeleBerço
                     }
                     else if (campo == "Estado")
                     {
-                        cbFiltro.Items.AddRange(new string[] { "Pronto", "Em Preparacao", "Cancelado","Em Espera" }); // Ajuste conforme necessário
+                        cbFiltro.Items.AddRange(new string[] { "Pronto", "Em Preparacao", "Cancelado", "Em Espera" }); // Ajuste conforme necessário
                     }
                     break;
             }
@@ -541,15 +694,15 @@ namespace TeleBerço
 
         private void txtNome_TextChanged(object sender, EventArgs e)
         {
-            
-                if ((string.IsNullOrEmpty(txtNome.Text)) && (cbFiltro.Text==""))
-                {
-                    // Se o texto for apagado, recarrega os dados originais
-                    button1_Click(sender, e);
-                }
-           
+
+            if ((string.IsNullOrEmpty(txtNome.Text)) && (cbFiltro.Text == ""))
+            {
+                // Se o texto for apagado, recarrega os dados originais
+                button1_Click(sender, e);
+            }
+
         }
-      
+
 
     }
 

@@ -1,50 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using TeleBerço.DsProdutosTableAdapters;
+using static TeleBerço.DsClientes;
+using static TeleBerço.DsProdutos;
 
 namespace TeleBerço
 {
     public partial class FrmDocumentos : Form
     {
-        // Classe interna para itens de conteúdo na impressão
-        private class ContentItem
-        {
-            public Bitmap Image { get; set; }
-            public float OriginalWidth { get; set; }
-            public float OriginalHeight { get; set; }
-        }
-
         // Datasets e TableAdapters
         private DsClientes dsClientes = new DsClientes();
-
         private QuerryProdutosTableAdapter querryProdutosTableAdapter = new QuerryProdutosTableAdapter();
-
         // Variáveis de controle
         private PrintDocument printDocument = new PrintDocument();
 
         public FrmDocumentos()
         {
             InitializeComponent();
-
         }
-
-        #region Configuração e Eventos
-
-
-
-        #endregion
-
-        #region Carregamento e Preenchimento de Dados
 
         private void FrmDocumentos_Load(object sender, EventArgs e)
         {
@@ -62,15 +40,23 @@ namespace TeleBerço
 
         private void CarregarDadosIniciais()
         {
-            dsProdutos.CarregaCategorias();
-            dsProdutos.CarregarMarcas();
-            dsDocumentos.CarregaTipoDoc();
+            try
+            {
+                dsProdutos.CarregaCategorias();
+                dsProdutos.CarregarMarcas();
+                dsDocumentos.CarregaTipoDoc();
+                TxtCodigoDoc.Focus();
+                // Configurar ComboBoxes
 
-            // Configurar ComboBoxes
+                TxtCodigoDoc.Text = "";
 
-            TxtCodigoDoc.Text = "";
-            TxtCodigoDoc.Focus();
-            txtEstado.Items.AddRange(new string[] { "Pronto", "Em Preparação", "Cancelado", "Em Espera" });
+
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar dados: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void PreencheDocumento(string tipoDoc, int nrDoc)
@@ -87,19 +73,19 @@ namespace TeleBerço
                     if (!rowPesquisada.IsNull("CodProduto"))
                     {
                         var produtoRow = dsProdutos.PesquisarArtigo(rowPesquisada.CodProduto);
-                        if (produtoRow.CodPr  != "")
+                        if (produtoRow.CodPr != dsProdutos.DaProxCodArtigo())
                         {
                             txtEquipNome.Text = produtoRow.NomeProduto;
                             txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
                             txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
                             txtImei.Text = produtoRow.IMEI;
-                            txtObservacoes.Text = produtoRow.Observacao;
+
                         }
                     }
 
                     // Preencher dados do cliente associado
                     var clienteRow = dsClientes.PesquisaCliente(rowPesquisada.Cliente);
-                    if (clienteRow != null)
+                    if (clienteRow.CodCl != dsClientes.DaProxNrCliente())
                     {
                         TxtCodigoCl.Text = clienteRow.CodCl;
                         TxtNomeCl.Text = clienteRow.Nome;
@@ -113,20 +99,20 @@ namespace TeleBerço
                     txtTotal.Text = rowPesquisada.Total.ToString("F2");
                     txtObservacoes.Text = rowPesquisada.Observacoes;
                     txtEstado.Text = rowPesquisada.Estado;
+                    txtDesconto.Text = rowPesquisada.Desconto.ToString();
 
                     // Carregar linhas do documento
                     dsDocumentos.CarregaLinhas(rowPesquisada.ID);
                     AdicionarDescricoesPr();
                     DesabilitarBotoes();
-
                 }
                 else
                 {
-                    NrDoc.Text = dsDocumentos.DaNrDocSeguinte(TxtCodigoDoc.Text).ToString();
+                    NrDoc.Text = dsDocumentos.DaNrDocSeguinte(tipoDoc).ToString();
                     HabilitarBotoes();
                     LimparCliente();
                     txtTotal.Text = "0";
-                    txtEstado.Text="";
+                    txtEstado.Text = "";
                     txtDesconto.Text = "0";
                     LimparProduto();
                     TxtCodigoCl.Enabled = true;
@@ -137,10 +123,6 @@ namespace TeleBerço
                 MessageBox.Show($"Erro ao preencher documento: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        #endregion
-
-        #region Validações
 
         private bool ValidaPreenchimentoCliente()
         {
@@ -159,9 +141,13 @@ namespace TeleBerço
                    !string.IsNullOrWhiteSpace(txtEstado.Text);
         }
 
-        #endregion
-
-        #region Eventos dos Controles
+        private bool ValidaPreenchimentoProdutos()
+        {
+            return !string.IsNullOrWhiteSpace(txtCat.Text) &&
+                   !string.IsNullOrWhiteSpace(txtMarca.Text) &&
+                   !string.IsNullOrWhiteSpace(txtEquipNome.Text) &&
+                   !string.IsNullOrWhiteSpace(TxtCusto.Text);
+        }
 
         private void TxtCodigoDoc_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -169,6 +155,7 @@ namespace TeleBerço
             {
                 if (TxtCodigoDoc.Text != "")
                 {
+                
                     var tipoRow = dsDocumentos.TipoDocumentos.FindByCodDoc(TxtCodigoDoc.SelectedValue.ToString());
 
                     if (tipoRow != null)
@@ -181,6 +168,7 @@ namespace TeleBerço
                         LimparProduto();
                         dsDocumentos.ListaProdutos.Clear();
                     }
+                    EstadoDoc();
                 }
             }
             catch (Exception ex)
@@ -189,15 +177,15 @@ namespace TeleBerço
             }
         }
 
+
         private void TxtCodigoDoc_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F4)
             {
                 AbrirSelecaoDocumentos();
+                EstadoDoc();
             }
         }
-
-
 
         private void TxtCodigoCl_KeyDown(object sender, KeyEventArgs e)
         {
@@ -209,43 +197,41 @@ namespace TeleBerço
 
         private void TxtCodigoCl_Leave(object sender, EventArgs e)
         {
-            var clienteRow = dsClientes.PesquisaCliente(TxtCodigoCl.Text);
+            try
+            {
+                var clienteRow = dsClientes.PesquisaCliente(TxtCodigoCl.Text);
 
-            if (clienteRow.Nome != "")
-            {
-                TxtNomeCl.Text = clienteRow.Nome;
-                TxtTelefone.Text = clienteRow.Telefone;
-                TxtEmail.Text = clienteRow.Email;
-                HabilitarCliente();
+                if (clienteRow.Nome != "")
+                {
+                    TxtNomeCl.Text = clienteRow.Nome;
+                    TxtTelefone.Text = clienteRow.Telefone;
+                    TxtEmail.Text = clienteRow.Email;
+                    HabilitarCliente();
+                }
+                else
+                {
+                    TxtCodigoCl.Text = dsClientes.DaProxNrCliente().ToString();
+                    TxtNomeCl.Enabled = true;
+                    BtnGravarCliente.Enabled = true;
+                    HabilitarCliente();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TxtCodigoCl.Text = dsClientes.DaProxNrCliente().ToString();
-                TxtNomeCl.Enabled = true;
-                BtnGravarCliente.Enabled = true;
-                HabilitarCliente();
+                MessageBox.Show($"Erro ao preencher cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
-
-        private void txtEstado_SelectedValueChanged(object sender, EventArgs e)
-        {
-            tsGravarDoc.Enabled = true;
-        }
-
-        #endregion
-
-        #region Eventos dos Botões
-
-
 
         private void btnNovoPr_Click(object sender, EventArgs e)
         {
             try
             {
-                dsProdutos.NovoArtigo();
+
                 LimparProduto();
                 txtObservacoes.Text = "";
                 HabilitarProduto();
+                dsProdutos.NovoArtigo();
             }
             catch (Exception ex)
             {
@@ -257,24 +243,27 @@ namespace TeleBerço
         {
             try
             {
-                if (!string.IsNullOrEmpty(txtEquipNome.Text))
+                ProdutosRow produtoRow = dsProdutos.Produtos[0];
+                if (ValidaPreenchimentoProdutos())
                 {
-                    var produtoRow = dsProdutos.Produtos.NewProdutosRow();
-                    produtoRow.NomeProduto = txtEquipNome.Text;
-                    produtoRow.Categorias = txtCat.SelectedValue.ToString();
-                    produtoRow.Marcas = (int)txtMarca.SelectedValue;
-                    produtoRow.IMEI = txtImei.Text;
-                    produtoRow.Observacao = txtObservacoes.Text;
-                    produtoRow.Tipo = txtTipoPr.Text;
 
-                    dsProdutos.Produtos.AddProdutosRow(produtoRow);
-                    dsProdutos.UpdateArtigos();
+                    if (produtoRow.CodPr == dsProdutos.DaProxCodArtigo())
+                    {
+                        produtoRow.NomeProduto = txtEquipNome.Text;
+                        produtoRow.Categorias = txtCat.SelectedValue.ToString();
+                        produtoRow.Marcas = (int)txtMarca.SelectedValue;
+                        produtoRow.IMEI = txtImei.Text;
+                        produtoRow.Observacao = txtObservacoes.Text;
+                        produtoRow.Tipo = txtTipoPr.Text;
 
-                    MessageBox.Show("Produto salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        dsProdutos.UpdateArtigos();
+
+                        MessageBox.Show("Produto salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Preencha os campos obrigatórios do produto.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Preencha corretamente todos os campos .", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
@@ -290,10 +279,10 @@ namespace TeleBerço
                 FrmDados frmDados = new FrmDados();
                 frmDados.MostrarTabelaDados("DsArtigos");
 
-                if (frmDados.RowSelecionada is DsProdutos.ProdutosRow produtoRow)
+                if (frmDados.RowSelecionada is ProdutosRow produtoRow)
                 {
                     dsDocumentos.NovaLinhaArtigos(produtoRow);
-                    txtObservacoes.Text += produtoRow.Observacao;
+                    txtObservacoes.Text += produtoRow.Observacao + ";";
                 }
             }
             catch (Exception ex)
@@ -308,8 +297,13 @@ namespace TeleBerço
             {
                 if (DgridArtigos.CurrentRow != null)
                 {
-                    var id = Guid.Parse(DgridArtigos.CurrentRow.Cells["ID"].Value.ToString());
+                    var id = Guid.Parse(DgridArtigos.CurrentRow.Cells["iDDataGridViewTextBoxColumn"].Value.ToString());
                     dsDocumentos.EliminarLinha(id);
+                    txtObservacoes.Clear();
+                    foreach (DataGridViewRow linha in DgridArtigos.Rows)
+                    {
+                        txtObservacoes.Text += linha.Cells["Observacao"].Value.ToString() + ";";
+                    }
                 }
             }
             catch (Exception ex)
@@ -322,9 +316,10 @@ namespace TeleBerço
         {
             try
             {
+                var docRow = dsDocumentos.CabecDocumento[0];
+
                 if (ValidaPreenchimentoDocumento())
                 {
-                    var docRow = dsDocumentos.CabecDocumento.NewCabecDocumentoRow();
                     docRow.TipoDocumento = TxtCodigoDoc.Text;
                     docRow.NrDocumento = int.Parse(NrDoc.Text);
                     docRow.Cliente = TxtCodigoCl.Text;
@@ -333,15 +328,16 @@ namespace TeleBerço
                     docRow.Observacoes = txtObservacoes.Text;
                     docRow.DataEntrega = dateTimePicker1.Value.Date;
                     docRow.DataRececao = DataMod.Value.Date;
-
-                    // Obter código do produto
-                    var codProduto = querryProdutosTableAdapter.CodProduto(txtEquipNome.Text, (int)txtMarca.SelectedValue, txtCat.SelectedValue.ToString());
-                    if (codProduto != null)
+                    docRow.Desconto = int.Parse(txtDesconto.Text);
+                    if ((txtCat.Text == "") || (txtMarca.Text == ""))
+                    {// Obter código do produto
+                        docRow.CodProduto = "PR000";
+                    }
+                    else
                     {
-                        docRow.CodProduto = codProduto.ToString();
+                        docRow.CodProduto = txtCodPr.Text;
                     }
 
-                    dsDocumentos.CabecDocumento.AddCabecDocumentoRow(docRow);
                     dsDocumentos.UpdateDoc();
                     dsDocumentos.UpdateLinhas();
 
@@ -352,6 +348,7 @@ namespace TeleBerço
                 {
                     MessageBox.Show("Preencha todos os campos obrigatórios do documento.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
             }
             catch (Exception ex)
             {
@@ -365,7 +362,6 @@ namespace TeleBerço
             {
                 LimparFormulario();
                 HabilitarCampos();
-                dsDocumentos.NovoDocumento();
                 HabilitarBotoes();
             }
             catch (Exception ex)
@@ -434,9 +430,9 @@ namespace TeleBerço
                 FrmDados frmDados = new FrmDados();
                 frmDados.MostrarTabelaDados("DsArtigos");
 
-                if (frmDados.RowSelecionada is DsProdutos.ProdutosRow produtoRow)
+                if (frmDados.RowSelecionada is ProdutosRow produtoRow)
                 {
-                    dsProdutos.NovoArtigo();
+
                     txtEquipNome.Text = produtoRow.NomeProduto;
                     txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
                     txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
@@ -449,9 +445,150 @@ namespace TeleBerço
             }
         }
 
-        #endregion
+        private void DgridArtigos_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (DgridArtigos.Rows[e.RowIndex].Cells["precoUntDataGridViewTextBoxColumn"].Value != null &&
+                    DgridArtigos.Rows[e.RowIndex].Cells["quantidadeDataGridViewTextBoxColumn"].Value != null)
+                {
+                    decimal precoUnitario = Convert.ToDecimal(DgridArtigos.Rows[e.RowIndex].Cells["precoUntDataGridViewTextBoxColumn"].Value);
+                    decimal quantidade = Convert.ToDecimal(DgridArtigos.Rows[e.RowIndex].Cells["quantidadeDataGridViewTextBoxColumn"].Value);
+                    decimal totalLinha = precoUnitario * quantidade;
+                    DgridArtigos.Rows[e.RowIndex].Cells["totalDataGridViewTextBoxColumn"].Value = Math.Round(totalLinha, 2);
+                }
 
-        #region Métodos Auxiliares
+                CalcularTotalDocumento();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar linha: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAbrirCliente_Click_1(object sender, EventArgs e)
+        {
+            AbrirSelecaoClientes();
+        }
+
+
+        private void btnNovoCliente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LimparCliente();
+                TxtCodigoCl.Text = dsClientes.DaProxNrCliente();
+                BtnGravarCliente.Enabled = true;
+                dsClientes.NovoCliente();
+                HabilitarCliente();
+                TxtNomeCl.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao criar novo cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnGravarCliente_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ClientesRow novoCliente = dsClientes.Clientes[0];
+                if (ValidaPreenchimentoCliente())
+                {
+                    if (novoCliente.CodCl == dsClientes.DaProxNrCliente())
+                    {
+
+                        novoCliente.Nome = TxtNomeCl.Text;
+                        novoCliente.CodCl = TxtCodigoCl.Text;
+                        novoCliente.Telefone = TxtTelefone.Text;
+                        novoCliente.Email = TxtEmail.Text;
+
+                        dsClientes.UpdateClientes();
+
+                        MessageBox.Show("Cliente Criado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LimparCliente();
+                        BtnGravarCliente.Enabled = false;
+                        TxtNomeCl.Enabled = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Preencha todos os campos corretamente.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao gravar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void cBoxEuro_CheckedChanged(object sender, EventArgs e)
+        {
+            AplicarDesconto();
+        }
+
+        private void btnAbrirPr_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FrmDados frmDados = new FrmDados();
+                frmDados.MostrarTabelaDados("DsArtigos");
+
+                if (frmDados.RowSelecionada is ProdutosRow produtoRow)
+                {
+                    txtCodPr.Text = produtoRow.CodPr;
+                    txtEquipNome.Text = produtoRow.NomeProduto;
+                    txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
+                    txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
+                    txtImei.Text = produtoRow.IMEI;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao abrir produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void NrDoc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PreencheDocumento(TxtCodigoDoc.Text, int.Parse(NrDoc.Text));
+        }
+
+        private void AplicarDesconto()
+        {
+            try
+            {
+                if (decimal.TryParse(txtTotal.Text, out decimal total) && decimal.TryParse(txtDesconto.Text, out decimal desconto))
+                {
+                    if (cBoxEuro.Checked)
+                    {
+                        total -= desconto;
+                        cBoxPercent.Checked = false;
+                        cBoxPercent.Enabled = false;
+                        txtTotal.Text = total.ToString("F2");
+                    }
+
+                    else if (cBoxPercent.Checked)
+                    {
+                        total -= (total * (desconto / 100));
+                        cBoxEuro.Enabled = false;
+                        cBoxEuro.Checked = false;
+                        txtTotal.Text = total.ToString("F2");
+                    }
+                    else
+                    {
+                        cBoxEuro.Enabled = true;
+                        cBoxPercent.Enabled = true;
+                        CalcularTotalDocumento();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao aplicar desconto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void AbrirSelecaoClientes()
         {
@@ -460,7 +597,7 @@ namespace TeleBerço
                 FrmDados frmDados = new FrmDados();
                 frmDados.MostrarTabelaDados("DsClientes");
 
-                if (frmDados.RowSelecionada is DsClientes.ClientesRow clienteRow)
+                if (frmDados.RowSelecionada is ClientesRow clienteRow)
                 {
                     TxtCodigoCl.Text = clienteRow.CodCl;
                     TxtNomeCl.Text = clienteRow.Nome;
@@ -497,60 +634,31 @@ namespace TeleBerço
             }
         }
 
-        private void DgridArtigos_RowLeave(object sender, DataGridViewCellEventArgs e)
+        private void EstadoDoc()
         {
-            try
+            if (TxtCodigoDoc.Text == "ORC")
             {
-                if (DgridArtigos.Rows[e.RowIndex].Cells["precoUntDataGridViewTextBoxColumn"].Value != null &&
-                    DgridArtigos.Rows[e.RowIndex].Cells["quantidadeDataGridViewTextBoxColumn"].Value != null)
-                {
-                    decimal precoUnitario = Convert.ToDecimal(DgridArtigos.Rows[e.RowIndex].Cells["precoUntDataGridViewTextBoxColumn"].Value);
-                    decimal quantidade = Convert.ToDecimal(DgridArtigos.Rows[e.RowIndex].Cells["quantidadeDataGridViewTextBoxColumn"].Value);
-                    decimal totalLinha = precoUnitario * quantidade;
-                    DgridArtigos.Rows[e.RowIndex].Cells["totalDataGridViewTextBoxColumn"].Value = Math.Round(totalLinha, 2);
-                }
-
-                CalcularTotalDocumento();
+                txtEstado.Items.Clear();
+                txtEstado.Items.AddRange(new string[] { "Entregue", "Aceite", "Cancelado", "Finalizado" });
             }
-            catch (Exception ex)
+            else if (TxtCodigoDoc.Text == "FC")
             {
-                MessageBox.Show($"Erro ao atualizar linha: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtEstado.Items.Clear();
+                txtEstado.Items.AddRange(new string[] { "Emitida", "Concluida", "Anulada" });
             }
-        }
-
-        private void TxtDesconto_TextChanged(object sender, EventArgs e)
-        {
-            AplicarDesconto();
-        }
-
-        private void CBoxDesconto_CheckedChanged(object sender, EventArgs e)
-        {
-            AplicarDesconto();
-        }
-
-        private void AplicarDesconto()
-        {
-            try
+            else if (TxtCodigoDoc.Text == "NDE")
             {
-                if (decimal.TryParse(txtTotal.Text, out decimal total) && decimal.TryParse(txtDesconto.Text, out decimal desconto))
-                {
-                    if (cBoxEuro.Checked)
-                    {
-                        total -= desconto;
-                    }
-                    else if (cBoxPercent.Checked)
-                    {
-                        total -= (total * desconto / 100);
-                    }
-                    txtTotal.Text = total.ToString("F2");
-                }
+                txtEstado.Items.Clear();
+                txtEstado.Items.AddRange(new string[] { "Realizada", "Em espera", "Cancelada", "Em andamento" });
             }
-            catch (Exception ex)
+            else if (TxtCodigoDoc.Text == "NDE")
             {
-                MessageBox.Show($"Erro ao aplicar desconto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtEstado.Items.Clear();
+                txtEstado.Items.AddRange(new string[] { "Numerario", "Artigo", "Cancelada" });
             }
-        }
 
+
+        }
         private void CalcularTotalDocumento()
         {
             try
@@ -563,7 +671,6 @@ namespace TeleBerço
                     {
                         soma += Convert.ToDecimal(linha.Cells["totalDataGridViewTextBoxColumn"].Value);
                     }
-
                 }
 
                 txtTotal.Text = soma.ToString("F2");
@@ -575,18 +682,25 @@ namespace TeleBerço
         }
         private void AdicionarDescricoesPr()
         {
-            foreach (DataGridViewRow linha in DgridArtigos.Rows)
+            try
             {
-                // Preenche a coluna Marca
-                if (linha.Cells["Marca"].Value != DBNull.Value)
+                foreach (DataGridViewRow linha in DgridArtigos.Rows)
                 {
-                    linha.Cells["NomeMarca"].Value = querryProdutosTableAdapter.NomeMarca(int.Parse(linha.Cells["Marca"].Value.ToString()));
+                    // Preenche a coluna Marca
+                    if (linha.Cells["Marca"].Value != DBNull.Value)
+                    {
+                        linha.Cells["NomeMarca"].Value = querryProdutosTableAdapter.NomeMarca(int.Parse(linha.Cells["Marca"].Value.ToString()));
+                    }
+                    // Preenche a coluna Categoria
+                    if (linha.Cells["Categoria"].Value != DBNull.Value)
+                    {
+                        linha.Cells["NomeCategoria"].Value = querryProdutosTableAdapter.NomeCategoria(linha.Cells["Categoria"].Value.ToString());
+                    }
                 }
-                // Preenche a coluna Categoria
-                if (linha.Cells["Categoria"].Value != DBNull.Value)
-                {
-                    linha.Cells["NomeCategoria"].Value = querryProdutosTableAdapter.NomeCategoria(linha.Cells["Categoria"].Value.ToString());
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao adicionar descricao: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -596,12 +710,13 @@ namespace TeleBerço
             DgridArtigos.Columns["precoUntDataGridViewTextBoxColumn"].DefaultCellStyle.Format = "F2";
             DgridArtigos.Columns["quantidadeDataGridViewTextBoxColumn"].DefaultCellStyle.Format = "F2";
             DgridArtigos.Sort(DgridArtigos.Columns["numLInhaDataGridViewTextBoxColumn"], ListSortDirection.Ascending);
+
         }
 
         private void LimparFormulario()
         {
             NrDoc.Text = "0";
-            TxtCodigoDoc.SelectedIndex = -1;
+            TxtCodigoDoc.Text = "";
             TxtDescricaoDoc.Text = string.Empty;
             DataMod.Value = DateTime.Now;
             dateTimePicker1.Value = DateTime.Now;
@@ -619,7 +734,7 @@ namespace TeleBerço
 
         private void LimparCliente()
         {
-            TxtCodigoCl.Text= "";
+            TxtCodigoCl.Text = "";
             TxtNomeCl.Text = "Nome";
             TxtTelefone.Text = "Telefone";
             TxtEmail.Text = "Email";
@@ -631,7 +746,8 @@ namespace TeleBerço
             txtCat.Text = "";
             txtMarca.Text = "";
             txtImei.Text = string.Empty;
-           
+            txtObservacoes.Text = "";
+
         }
 
         private void HabilitarCampos()
@@ -654,6 +770,7 @@ namespace TeleBerço
             TxtCodigoCl.Enabled = false;
             tsGravarDoc.Enabled = false;
             txtDesconto.Enabled = false;
+            dateTimePicker1.Enabled = false;
         }
 
         private void HabilitarBotoes()
@@ -664,6 +781,8 @@ namespace TeleBerço
             btnAbrirPr.Enabled = true;
             tsImprimir.Enabled = true;
             btnAbrirCliente.Enabled = true;
+            txtDesconto.Enabled = true;
+            dateTimePicker1.Enabled = true;
         }
 
         private void HabilitarCliente()
@@ -684,15 +803,10 @@ namespace TeleBerço
             btnGravarPr.Enabled = true;
         }
 
-        #endregion
-
-        #region Impressão
-
-     
         private void ConfigurarImpressao()
         {
             printDocument = new PrintDocument();
-            
+
             printDocument.BeginPrint += BeginPrint;
             printDocument.PrintPage += PrintPage;
             PrintPreviewDialog previewDialog = new PrintPreviewDialog
@@ -771,7 +885,7 @@ namespace TeleBerço
                 Font fonteTitulo = new Font("Arial", 22, FontStyle.Bold);
                 Font fonteSubtitulo = new Font("Arial", 14, FontStyle.Bold);
                 Font fonteTexto = new Font("Arial", 12, FontStyle.Regular);
-               
+
                 Brush brush = Brushes.Black;
 
                 // Posicionamento vertical inicial
@@ -780,25 +894,23 @@ namespace TeleBerço
                 // Desenhar o cabeçalho (logotipo inicial, nome da loja e informações do documento)
                 yPos = DrawHeader(e.Graphics, marginLeft, yPos, pageWidth, fonteTitulo, fonteTexto, brush);
 
-                // Desenhar a linha separadora
-                 //  yPos = DrawSeparator(e.Graphics,marginLeft, yPos, pageWidth);
 
                 // Desenhar as informações do cliente
                 yPos = DrawClientInfo(e.Graphics, marginLeft, yPos, pageWidth, fonteSubtitulo, fonteTexto, brush);
 
                 // Desenhar a tabela de itens (DataGridView) com 7 colunas
-                yPos = DrawItemsTable(e.Graphics, marginLeft, yPos, pageWidth,  brush);
+                yPos = DrawItemsTable(e.Graphics, marginLeft, yPos, pageWidth, brush);
 
-               
+
                 // Desenhar as informações do produto após a tabela, com o título "Objeto"
-                 yPos = DrawObservacoesDescontoTotal(e.Graphics, marginLeft, yPos,TxtCodigoDoc.Text, pageWidth, fonteSubtitulo, fonteTexto, brush);
+                yPos = DrawObservacoesDescontoTotal(e.Graphics, marginLeft, yPos, TxtCodigoDoc.Text, pageWidth, fonteSubtitulo, fonteTexto, brush);
 
                 yPos = DrawSeparator(e.Graphics, marginLeft, yPos, pageWidth);
 
                 yPos = DrawFinalLogo(e.Graphics, marginLeft, yPos, marginTop, pageWidth, pageHeight, brush);
 
                 // Desenhar a assinatura e a data
-                yPos = DrawSignatureAndDate(e.Graphics, marginLeft, yPos,pageHeight, pageWidth, fonteTexto, brush);
+                DrawSignatureAndDate(e.Graphics, marginLeft, yPos, pageWidth, fonteTexto, brush);
 
                 // Desenhar o logotipo final
 
@@ -811,7 +923,6 @@ namespace TeleBerço
                 e.HasMorePages = false;
             }
         }
-
 
         private float DrawHeader(Graphics graphics, float marginLeft, float yPos, float pageWidth, Font fonteTitulo, Font fonteTexto, Brush brush)
         {
@@ -832,7 +943,7 @@ namespace TeleBerço
                 {
                     // Calcular a largura do logo mantendo a proporção
                     float aspectRatio = logo.Width / (float)logo.Height;
-                    logoWidth = aspectRatio * logoHeight +30;
+                    logoWidth = aspectRatio * logoHeight + 30;
 
                     // Garantir que o logo não ultrapasse a largura da página
                     if (logoWidth > pageWidth)
@@ -874,7 +985,7 @@ namespace TeleBerço
                 graphics.MeasureString(dataLabel + dataValor, fonteTexto).Height);
 
             // Medir larguras dos textos
-            SizeF numeroSize = graphics.MeasureString(numeroLabel + numeroValor, fonteTexto);
+
             SizeF dataSize = graphics.MeasureString(dataLabel + dataValor, fonteTexto);
 
             // **Desenhar Retângulo que Envolve o Texto do "Número" e da "Data"**
@@ -920,8 +1031,8 @@ namespace TeleBerço
             string[] clienteValores = { TxtNomeCl.Text, TxtTelefone.Text, TxtEmail.Text };
 
             // Preparar informações do produto
-            string[] produtoLabels = { "Categoria:", "Marca:" ,"Produto:", "IMEI: "};
-            string[] produtoValores = { txtCat.Text, txtMarca.Text,txtEquipNome.Text, txtImei.Text };
+            string[] produtoLabels = { "Categoria:", "Marca:", "Produto:", "IMEI: " };
+            string[] produtoValores = { txtCat.Text, txtMarca.Text, txtEquipNome.Text, txtImei.Text };
 
             // Calcular a altura necessária para as informações do cliente e do produto
             float lineHeight = fonteTexto.GetHeight(graphics);
@@ -945,7 +1056,7 @@ namespace TeleBerço
             float paddingY = 10;
 
             // Posição inicial para desenhar o texto dentro do retângulo
-            float textY = rectY + paddingY+15;
+            float textY = rectY + paddingY + 15;
 
             // **Desenhar informações do cliente alinhadas à margem esquerda**
             float clienteX = rectX + paddingX;
@@ -963,7 +1074,7 @@ namespace TeleBerço
 
             // **Desenhar informações do produto alinhadas à margem direita**
             // Resetar textY para a posição inicial
-            textY = rectY + paddingY+5;
+            textY = rectY + paddingY + 3;
 
             // Medir a largura máxima das labels e valores do produto
             float maxProdutoLabelWidth = 0;
@@ -991,18 +1102,15 @@ namespace TeleBerço
             }
 
             // Atualizar yPos para a próxima seção
-            yPos += rectHeight + 50; // Espaçamento após o retângulo
+            yPos += rectHeight + 30; // Espaçamento após o retângulo
 
             return yPos;
         }
-
-
-        private float DrawObservacoesDescontoTotal(Graphics graphics, float marginLeft, float yPos,string codDocumento, float pageWidth, Font fonteSubtitulo, Font fonteTexto,  Brush brush)
+        private float DrawObservacoesDescontoTotal(Graphics graphics, float marginLeft, float yPos, string codDocumento, float pageWidth, Font fonteSubtitulo, Font fonteTexto, Brush brush)
         {
-
             Font fonteNegrito = new Font(fonteTexto.FontFamily, 12, FontStyle.Bold);
 
-            Font fonteNormal = new Font(fonteTexto.FontFamily, 10, FontStyle.Bold); 
+            Font fonteNormal = new Font(fonteTexto.FontFamily, 10, FontStyle.Bold);
             // Espaçamento interno e entre elementos
             float padding = 10;
             float lineHeight = fonteTexto.GetHeight(graphics) + 5;
@@ -1010,12 +1118,18 @@ namespace TeleBerço
             // **1. Preparar textos e valores**
             string observacoesLabel = "Observações";
             string observacoesTexto = txtObservacoes.Text;
-
-            string descontoLabel = "Desconto:";
             string descontoValor = txtDesconto.Text;
-
+            string descontoLabel = "Desconto:";
+            if (cBoxPercent.Checked)
+            {
+                descontoValor = txtDesconto.Text + " %";
+            }
+            else if (cBoxEuro.Checked)
+            {
+                descontoValor = txtDesconto.Text + " €";
+            }
             string totalLabel = "Total:";
-            string totalValor = txtTotal.Text;
+            string totalValor = txtTotal.Text + "€";
 
             string previsaoLabel = "Previsão:";
             string previsaoTexto = dateTimePicker1.Value.Date.ToString("dd/MM/yyyy");
@@ -1053,31 +1167,31 @@ namespace TeleBerço
 
             // **4. Desenhar a seção de Desconto e Total**
             float valoresX = marginLeft + observacoesWidth;
-            float valoresY = yPos ;
+            float valoresY = yPos;
 
             if (codDocumento == "ORC" || codDocumento == "NDC")
             {
                 graphics.DrawString(previsaoLabel, fonteNormal, brush, valoresX + padding, valoresY + padding);
                 float labelDireitaWidth = graphics.MeasureString(previsaoLabel, fonteNegrito).Width;
-                graphics.DrawString(previsaoTexto, fonteNormal, brush, valoresX + padding + labelDireitaWidth , valoresY + padding);
+                graphics.DrawString(previsaoTexto, fonteNormal, brush, valoresX + padding + labelDireitaWidth, valoresY + padding);
             }
-                // **4.1. Desenhar "Desconto" e valor**
-                graphics.DrawString(descontoLabel, fonteNormal, brush, valoresX + padding, valoresY + padding + 20 );
+            // **4.1. Desenhar "Desconto" e valor**
+            graphics.DrawString(descontoLabel, fonteNormal, brush, valoresX + padding, valoresY + padding + 20);
             float descontoLabelWidth = graphics.MeasureString(descontoLabel, fonteSubtitulo).Width;
-            graphics.DrawString(descontoValor, fonteNormal, brush, valoresX + padding + descontoLabelWidth-15, valoresY + padding+20 );
+            graphics.DrawString(descontoValor, fonteNormal, brush, valoresX + padding + descontoLabelWidth - 15, valoresY + padding + 20);
 
             // **4.2. Desenhar "Total" e valor abaixo de "Desconto"**
             float totalY = valoresY + lineHeight + padding;
-            graphics.DrawString(totalLabel, fonteNegrito, brush, valoresX + padding+70, totalY + padding+ 20);
+            graphics.DrawString(totalLabel, fonteNegrito, brush, valoresX + padding + 50, totalY + padding + 20);
             float totalLabelWidth = graphics.MeasureString(totalLabel, fonteSubtitulo).Width;
-            graphics.DrawString(totalValor, fonteTexto, brush, valoresX + padding + totalLabelWidth + 65, totalY + padding+20);
+            graphics.DrawString(totalValor, fonteTexto, brush, valoresX + padding + totalLabelWidth + 50, totalY + padding + 20);
 
             // **4.3. Desenhar retângulo ao redor de Desconto e Total**
             float valoresHeight = observacoesRectHeight; // Mesmo altura da seção de Observações
             graphics.DrawRectangle(Pens.Black, valoresX, valoresY, valoresWidth, valoresHeight);
 
             // **5. Atualizar yPos para a próxima seção**
-            yPos += observacoesRectHeight + 30; // Espaçamento após a seção
+            yPos += observacoesRectHeight + 40; // Espaçamento após a seção
 
             return yPos;
         }
@@ -1085,37 +1199,27 @@ namespace TeleBerço
         private float DrawSeparator(Graphics graphics, float marginLeft, float yPos, float pageWidth)
         {
             graphics.DrawLine(Pens.Black, marginLeft, yPos, marginLeft + pageWidth, yPos);
-            yPos += 40; // Aumentar o espaçamento após a linha
+            yPos += 20; // Aumentar o espaçamento após a linha
             return yPos;
         }
 
-
-        private float DrawSignatureAndDate(Graphics graphics, float marginLeft, float yPos, float pageHeight, float pageWidth, Font fonteTexto, Brush brush)
+        private void DrawSignatureAndDate(Graphics graphics, float marginLeft, float yPos, float pageWidth, Font fonteTexto, Brush brush)
         {
             string assinaturaText = "Assinatura";
-            string dataMod = DateTime.Now.ToShortDateString();
-
             // Desenhar a assinatura
             SizeF assinaturaTextSize = graphics.MeasureString(assinaturaText, fonteTexto);
             float signatureLineWidth = pageWidth / 2;
             float totalSignatureWidth = assinaturaTextSize.Width + signatureLineWidth;
-            float signatureBlockX = marginLeft+pageWidth/2-(totalSignatureWidth/2);
+            float signatureBlockX = marginLeft + pageWidth / 2 - (totalSignatureWidth / 2);
 
-             // Espaçamento após 'Assinatura'
+            // Espaçamento após 'Assinatura'
 
             graphics.DrawString(assinaturaText, fonteTexto, brush, signatureBlockX, yPos);
             float lineY = yPos + assinaturaTextSize.Height / 2;
             graphics.DrawLine(Pens.Black, signatureBlockX + assinaturaTextSize.Width, lineY, signatureBlockX + assinaturaTextSize.Width + signatureLineWidth, lineY);
-
-
-            // Desenhar a data
-           
-
-            return yPos;
         }
 
-
-        private float DrawItemsTable(Graphics graphics, float marginLeft, float yPos, float pageWidth,  Brush brush)
+        private float DrawItemsTable(Graphics graphics, float marginLeft, float yPos, float pageWidth, Brush brush)
         {
             // Título da seção
             Font fonteSubtitulo = new Font("Arial", 14, FontStyle.Bold);
@@ -1128,7 +1232,7 @@ namespace TeleBerço
             int numColumns = 7;
 
             // Definir cabeçalhos das colunas
-            var columnsToPrint = new[] {  "NomeCategoria", "NomeMarca", "NomeProduto", "iMEIDataGridViewTextBoxColumn", "precoUntDataGridViewTextBoxColumn", "quantidadeDataGridViewTextBoxColumn", "totalDataGridViewTextBoxColumn" };
+            var columnsToPrint = new[] { "NomeCategoria", "NomeMarca", "NomeProduto", "iMEIDataGridViewTextBoxColumn", "precoUntDataGridViewTextBoxColumn", "quantidadeDataGridViewTextBoxColumn", "totalDataGridViewTextBoxColumn" };
             var columnHeaders = new[] { "Categoria", "Marca", "Produto", "Código", "Preço Un", "Quantidade", "Total" };
 
             // Calcular largura das colunas
@@ -1157,7 +1261,6 @@ namespace TeleBerço
                 graphics.DrawString(headerText, fonteTexto, brush, textX, textY);
                 xPos += columnWidths[i];
             }
-
             yPos += lineHeight;
             xPos = marginLeft;
 
@@ -1169,7 +1272,7 @@ namespace TeleBerço
                     for (int i = 0; i < numColumns; i++)
                     {
                         // Desenhar retângulo da célula
-                        graphics.DrawRectangle(pen, xPos, yPos, columnWidths[i], lineHeight-2);
+                        graphics.DrawRectangle(pen, xPos, yPos, columnWidths[i], lineHeight - 2);
 
                         // Obter o valor da célula
                         string cellValue = row.Cells[columnsToPrint[i]].Value?.ToString() ?? "";
@@ -1191,7 +1294,6 @@ namespace TeleBerço
             return yPos;
         }
 
-
         private float DrawFinalLogo(Graphics graphics, float marginLeft, float yPos, float marginTop, float pageWidth, float pageHeight, Brush brush)
         {
             string bottomImagePath = "C:\\Users\\synys\\source\\repos\\TeleBerço\\Resources\\Morada2.jpeg";
@@ -1208,106 +1310,82 @@ namespace TeleBerço
                     float bottomImageYPosition = marginTop + pageHeight - bottomImgHeight; // Posicionar logo após o último conteúdo
 
                     graphics.DrawImage(bottomImage, bottomImageX, bottomImageYPosition, desiredBottomImgWidth, bottomImgHeight);
-                    yPos = marginTop + pageHeight - bottomImgHeight-70;
+                    yPos = marginTop + pageHeight - bottomImgHeight - 70;
 
                 }
             }
             return yPos;
         }
 
-        #endregion
-
-        private void btnAbrirCliente_Click_1(object sender, EventArgs e)
+        private void txtDesconto_TextChanged_1(object sender, EventArgs e)
         {
-            AbrirSelecaoClientes();
-        }
-        
-
-        private void btnNovoCliente_Click(object sender, EventArgs e)
-        {
-            try
+            if ((txtDesconto.Text == "0") || (txtDesconto.Text == ""))
             {
-                dsClientes.NovoCliente();
-                LimparCliente();
-                TxtCodigoCl.Text = dsClientes.Clientes[0].CodCl;
-                BtnGravarCliente.Enabled = true;
-
-                HabilitarCliente();
-                TxtNomeCl.Focus();
+                CalcularTotalDocumento();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Erro ao criar novo cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AplicarDesconto();
             }
         }
 
-        private void BtnGravarCliente_Click(object sender, EventArgs e)
+        private void toolStripMenuItem10_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (ValidaPreenchimentoCliente())
-                {
-                    var clienteRow = dsClientes.Clientes[0];
-                    clienteRow.Nome = TxtNomeCl.Text;
-                    clienteRow.CodCl = TxtCodigoCl.Text;
-                    clienteRow.Telefone = TxtTelefone.Text;
-                    clienteRow.Email = TxtEmail.Text;
-
-                    dsClientes.UpdateClientes();
-
-                    MessageBox.Show("Cliente salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimparCliente();
-                    BtnGravarCliente.Enabled = false;
-                    TxtNomeCl.Enabled = false;
-                }
-                else
-                {
-                    MessageBox.Show("Preencha todos os campos obrigatórios do cliente.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao gravar cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void cBoxEuro_CheckedChanged(object sender, EventArgs e)
-        {
-            AplicarDesconto();
-        }
-
-        private void btnAbrirPr_Click(object sender, EventArgs e)
-        {
-
             try
             {
                 FrmDados frmDados = new FrmDados();
-                frmDados.MostrarTabelaDados("DsArtigos");
-
-                if (frmDados.RowSelecionada is DsProdutos.ProdutosRow produtoRow)
-                {
-                    dsProdutos.NovoArtigo();
-                    txtEquipNome.Text = produtoRow.NomeProduto;
-                    txtCat.Text = querryProdutosTableAdapter.NomeCategoria(produtoRow.Categorias).ToString();
-                    txtMarca.Text = querryProdutosTableAdapter.NomeMarca(produtoRow.Marcas);
-                    txtImei.Text = produtoRow.IMEI;
-                  
-                    HabilitarProduto();
-                }
+                frmDados.MostrarTabelaDados("DsCategorias");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao abrir produto: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao carregar Categorias: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void tsMarcas_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FrmDados frmDados = new FrmDados();
+                frmDados.MostrarTabelaDados("DsMarcas");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar Marcas: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void NrDoc_SelectedIndexChanged(object sender, EventArgs e)
+        private void tsAddMarcas_Click(object sender, EventArgs e)
         {
+            try
+            {
+                FrmCat_Marca frmCat_Marca = new FrmCat_Marca();
+                frmCat_Marca.tipoDadosAtual = FrmCat_Marca.TipoDados.Marcas;
+                frmCat_Marca.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao abrir formulario: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void tsAddCategorias_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FrmCat_Marca frmCat_Marca = new FrmCat_Marca();
+                frmCat_Marca.tipoDadosAtual = FrmCat_Marca.TipoDados.Categorias;
+                frmCat_Marca.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao abrir formulario: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-            PreencheDocumento(TxtCodigoDoc.Text, int.Parse(NrDoc.Text));
-
-
+        private void cBoxPercent_CheckedChanged(object sender, EventArgs e)
+        {
+            AplicarDesconto();
         }
     }
 }
+

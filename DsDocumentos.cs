@@ -26,6 +26,7 @@ namespace TeleBerço
 
         public void CarregaTipoDoc()
         {
+            TipoDocumentos.Clear();
             adpTipoDocumentos.Fill(TipoDocumentos);
         }
 
@@ -53,6 +54,7 @@ namespace TeleBerço
 
         public void CarregarDocumentos()
         {
+            CabecDocumento.Clear();
             adpCabecDocumento.Fill(CabecDocumento);
 
         }
@@ -64,8 +66,8 @@ namespace TeleBerço
 
         public CabecDocumentoRow PesquisaDocumento(string tipoDoc, int nrDoc)
         {
-            CarregaDocumento(tipoDoc, nrDoc);
 
+            CarregaDocumento(tipoDoc, nrDoc);
             if (CabecDocumento.Rows.Count > 0)
             {
                 return CabecDocumento[0];
@@ -93,6 +95,7 @@ namespace TeleBerço
                 newDocRow.CodProduto = "";
                 newDocRow.Estado = "";
                 newDocRow.NomeCliente = "";
+                newDocRow.Desconto = 0;
 
                 ListaProdutos.Clear();
 
@@ -102,7 +105,7 @@ namespace TeleBerço
 
         public void NovaLinhaArtigos(ProdutosRow rowSelecionada)
         {
-            //  NovoDocumento();
+            NovoDocumento();
 
             ListaProdutosRow novaLinha = ListaProdutos.NewListaProdutosRow();
 

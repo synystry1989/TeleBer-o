@@ -1,5 +1,8 @@
 ﻿using TeleBerço.DsClientesTableAdapters;
 using TeleBerço;
+using static TeleBerço.DsDocumentos;
+using System.Data;
+using System;
 
 
 
@@ -33,7 +36,7 @@ namespace TeleBerço
             {
                 ClientesRow novoCliente = (ClientesRow)Clientes.NewRow();
 
-                novoCliente.CodCl = "";
+                novoCliente.CodCl = DaProxNrCliente();
                 novoCliente.Nome = "";
                 novoCliente.Telefone = "";
                 novoCliente.Email = "";
@@ -52,7 +55,7 @@ namespace TeleBerço
                 //retiramos o CL ao cod incrementamos 
                 valor = int.Parse(codCl.Substring(2));
                 valor++;
-                return $"CL{valor:000}" ;
+                return $"CL{valor:000}";
             }
             else
             //se nao existir 
@@ -61,7 +64,7 @@ namespace TeleBerço
                 return $"CL{valor:000}";
             }
         }
-       
+
 
         public ClientesRow PesquisaCliente(string codCl)
         {
@@ -78,6 +81,16 @@ namespace TeleBerço
         public string CarregaNomeCliente(string codCl)
         {
             return adpClientes.NomeCliente(codCl);
+        }
+
+        public void EliminarCliente(string id)
+        {
+            ClientesRow linhaSelecionada = Clientes.FindByCodCl(id);
+
+
+            linhaSelecionada?.Delete();
+
+            UpdateClientes();
         }
     }
 

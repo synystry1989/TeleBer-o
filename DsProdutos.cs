@@ -1,4 +1,5 @@
 ﻿using TeleBerço.DsProdutosTableAdapters;
+using static TeleBerço.DsClientes;
 
 namespace TeleBerço
 {
@@ -50,7 +51,7 @@ namespace TeleBerço
             {
                 ProdutosRow novoArtigo = Produtos.NewProdutosRow();
 
-                novoArtigo.CodPr = "";
+                novoArtigo.CodPr = DaProxCodArtigo();
                 novoArtigo.NomeProduto = "";
                 novoArtigo.Observacao = "";
                 novoArtigo.PrecoCusto = 0;
@@ -86,7 +87,7 @@ namespace TeleBerço
             if (codCl == null)
             {
                 valor = 001;
-                return $"PR{valor:000}"; 
+                return $"PR{valor:000}";
             }
             else
             {
@@ -120,6 +121,28 @@ namespace TeleBerço
 
                 Categorias.Rows.Add(catRow);
             }
+        }
+        public void EliminarPr(string id)
+        {
+            ProdutosRow linhaSelecionada = Produtos.FindByCodPr(id);
+
+            linhaSelecionada?.Delete();
+            UpdateArtigos();
+        }
+
+        public void EliminarCat(string id)
+        {
+            CategoriasRow linhaSelecionada = Categorias.FindByCodCat(id);
+
+            linhaSelecionada?.Delete();
+            UpdateCategorias();
+        }
+        public void EliminarMarca(int id)
+        {
+            MarcasRow linhaSelecionada = Marcas.FindById(id);
+
+            linhaSelecionada?.Delete();
+            UpdateMarcas();
         }
 
 
